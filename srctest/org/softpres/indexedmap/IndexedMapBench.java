@@ -14,7 +14,7 @@ import static java.util.Collections.singleton;
  */
 public class IndexedMapBench {
 
-  private final IndexedMap<Integer, User> users = new IndexedMap<>();
+  private final IndexedMap<Integer, User> users = new IndexedHashMap<>();
   private final Function<String, Map<Integer, User>> byName = users.addIndex((id, u) -> singleton(u.name));
   private final Function<String, Map<Integer, User>> byLike = users.addIndex((id, u) -> u.likes);
 

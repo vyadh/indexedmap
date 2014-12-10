@@ -16,7 +16,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
 
 /**
- * Unit tests for {@link IndexedMap}.
+ * Unit tests for {@link IndexedHashMap}.
  */
 public class IndexedMapTest {
 
@@ -52,7 +52,7 @@ public class IndexedMapTest {
 
   @Before
   public void init() {
-    map = new IndexedMap<>();
+    map = new IndexedHashMap<>();
   }
 
   @Test
