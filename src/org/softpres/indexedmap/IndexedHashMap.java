@@ -108,4 +108,9 @@ public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
 
   }
 
+  @Override
+  public Set<Map.Entry<K, V>> entrySet() {
+    return Collections.unmodifiableSet(contents.entrySet());
+  }
+
 }

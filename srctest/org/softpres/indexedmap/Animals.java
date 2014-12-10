@@ -3,6 +3,7 @@ package org.softpres.indexedmap;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 /**
  * Helper animal methods for tests.
@@ -18,14 +19,13 @@ class Animals {
 
   static final Animal woundedDog = new Animal(new Id(1), "Dog", 3, foods("medicine"));
 
-  static HashMap<Id, Animal> map(Animal... animals) {
+  static Map<Id, Animal> map(Animal... animals) {
     HashMap<Id, Animal> result = new HashMap<>();
     for (Animal animal : animals) {
       result.put(animal.id, animal);
     }
     return result;
   }
-
 
   static HashSet<String> foods(String... foods) {
     return new HashSet<>(Arrays.asList(foods));

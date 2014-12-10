@@ -14,7 +14,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
 
 /**
- * Unit tests for {@link IndexedHashMap}.
+ * Unit tests for index methods on {@link IndexedHashMap}.
  */
 public class IndexedMapIndexingTest {
 
