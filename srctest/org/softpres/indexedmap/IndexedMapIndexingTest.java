@@ -10,66 +10,13 @@ import java.util.function.Function;
 import static org.softpres.indexedmap.Animals.*;
 import static java.util.Collections.singleton;
 import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
 
 /**
  * Unit tests for {@link IndexedHashMap}.
  */
-public class IndexedMapTest {
-
-  @Test
-  public void insertReplacesPreviousItem() {
-    IndexedMap<Id, Animal> map = new IndexedHashMap<>();
-    Id id = new Id(42);
-
-    map.insert(id, cat);
-    Optional<Animal> previous = map.insert(id, dog);
-
-    assertThat(previous, is(Optional.of(cat)));
-  }
-
-  @Test
-  public void selectingItemThatHasBeenPreviouslyInserted() {
-    IndexedMap<Id, Animal> map = new IndexedHashMap<>();
-    Id id = new Id(42);
-
-    map.insert(id, dog);
-
-    assertThat(map.select(id), is(Optional.of(dog)));
-  }
-
-  @Test
-  public void insertNewItemReturnsEmptyOptional() {
-    IndexedMap<Id, Animal> map = new IndexedHashMap<>();
-    Id id = new Id(42);
-
-    Optional<Animal> previous = map.insert(id, dog);
-
-    assertThat(previous, is((Optional.empty())));
-  }
-
-  @Test
-  public void deleteWithoutPreviousItemReturnsEmpty() {
-    IndexedMap<Id, Animal> map = new IndexedHashMap<>();
-    Id id = new Id(42);
-
-    Optional<Animal> previous = map.delete(id);
-
-    assertThat(previous, is(Optional.empty()));
-  }
-
-  @Test
-  public void deleteWithPreviousItemReturnsPrevious() {
-    IndexedMap<Id, Animal> map = new IndexedHashMap<>();
-    Id id = new Id(53);
-
-    map.insert(id, dog);
-    Optional<Animal> previous = map.delete(id);
-
-    assertThat(previous, is((Optional.of(dog))));
-  }
+public class IndexedMapIndexingTest {
 
   @Test
   public void indexByUnknownFoodReturnsNoAnimals() {
