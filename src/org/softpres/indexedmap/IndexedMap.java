@@ -4,7 +4,6 @@ package org.softpres.indexedmap;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -28,7 +27,7 @@ import java.util.function.Function;
  * @param <K> type of key.
  * @param <V> type of value.
  */
-public interface IndexedMap<K, V> {
+public interface IndexedMap<K, V> extends Map<K, V> {
 
   /**
    * Get the value associated with the supplied key on the primary index.
@@ -68,12 +67,5 @@ public interface IndexedMap<K, V> {
    * @return index function, allowing lookup of all entries for the supplied secondary index key.
    */
   <I> Function<I, Map<K, V>> addIndex(BiFunction<K, V, Iterable<I>> view);
-
-  /**
-   * Provide a snapshot of the current contents of the map.
-   * This could be achieved using an index, but that would affect
-   * the performance of normal operations.
-   */
-  Set<Map.Entry<K, V>> entrySet();
 
 }

@@ -16,26 +16,41 @@ public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
 
   @Override
   public Optional<V> select(K key) {
+    return Optional.ofNullable(get(key));
+  }
+
+  @Override
+  public V get(Object key) {
     Objects.requireNonNull(key);
 
-    return Optional.ofNullable(contents.get(key));
+    return contents.get(key);
   }
 
   @Override
   public Optional<V> insert(K key, V value) {
+    return Optional.ofNullable(put(key, value));
+  }
+
+  @Override
+  public V put(K key, V value) {
     Objects.requireNonNull(key);
     Objects.requireNonNull(value);
 
-    Optional<V> prev = Optional.ofNullable(contents.put(key, value));
-    if (prev.isPresent()) {
-      for (Index<?> i : indices) {
-        i.remove(key, prev.get());
-      }
+    V previous = contents.put(key, value);
+    if (previous != null) {
+      removeFromIndex(key, previous);
     }
-    for (Index<?> index : indices) {
-      index.add(key, value);
-    }
-    return prev;
+    addToIndex(key, value);
+
+    return previous;
+  }
+
+  private void removeFromIndex(K key, V value) {
+    indices.forEach(i -> i.remove(key, value));
+  }
+
+  private void addToIndex(K key, V value) {
+    indices.forEach(i -> i.add(key, value));
   }
 
   @Override
@@ -43,8 +58,21 @@ public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
     Objects.requireNonNull(key);
 
     Optional<V> previous = Optional.ofNullable(contents.remove(key));
-    previous.ifPresent(p -> indices.forEach(i -> i.remove(key, p)));
+    if (previous.isPresent()) {
+      removeFromIndex(key, previous.get());
+    }
     return previous;
+  }
+
+  @Override
+  public V remove(Object key) {
+    // Unavoidable cast because of remove() interface signature
+    // Interestingly, this does not throw a CCE until the index lambda expr
+    // todo need to find a performant way to fail safely
+    @SuppressWarnings("unchecked")
+    K k = (K)key;
+
+    return delete(k).orElse(null);
   }
 
   @Override
@@ -108,9 +136,54 @@ public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
 
   }
 
+  /**
+   * Provide a snapshot of the current contents of the map.
+   * This could be achieved using an index, but that would affect
+   * the performance of normal operations.
+   */
   @Override
   public Set<Map.Entry<K, V>> entrySet() {
     return Collections.unmodifiableSet(contents.entrySet());
+  }
+
+  @Override
+  public int size() {
+    return 0;
+  }
+
+  @Override
+  public boolean isEmpty() {
+    return false;
+  }
+
+  @Override
+  public boolean containsKey(Object key) {
+    return false;
+  }
+
+  @Override
+  public boolean containsValue(Object value) {
+    return false;
+  }
+
+  @Override
+  public void putAll(Map<? extends K, ? extends V> m) {
+
+  }
+
+  @Override
+  public void clear() {
+
+  }
+
+  @Override
+  public Set<K> keySet() {
+    return null;
+  }
+
+  @Override
+  public Collection<V> values() {
+    return null;
   }
 
 }

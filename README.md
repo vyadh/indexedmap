@@ -21,11 +21,11 @@ Usage
 -----
 
 This library contains a simplified Map-like interface IndexedMap. It is not
-intended to be used as a general-purpose map, but may very well be extended
-to implement all of `java.util.Map` in the future.
+intended to be used as a general-purpose map, but implement `java.util.Map`
+for convenience.
 
-To allow this to happen, alternative methods making use of `Optional` are
-provided, as future siblings to the null-using `java.util.Map` versions.
+Alternative methods making use of `Optional` are provided, as siblings to the
+null-using `java.util.Map` versions.
 
 * `insert` is the alternative to `put`
 * `select` is the alternative to `get`
