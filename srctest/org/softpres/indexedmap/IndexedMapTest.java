@@ -21,56 +21,61 @@ public class IndexedMapTest {
 
   @Test
   public void insertReplacesPreviousItem() {
-    IndexedMap<Integer, Animal> map = new IndexedHashMap<>();
+    IndexedMap<Id, Animal> map = new IndexedHashMap<>();
+    Id id = new Id(42);
 
-    map.insert(42, cat);
-    Optional<Animal> previous = map.insert(42, dog);
+    map.insert(id, cat);
+    Optional<Animal> previous = map.insert(id, dog);
 
     assertThat(previous, is(Optional.of(cat)));
   }
 
   @Test
   public void selectingItemThatHasBeenPreviouslyInserted() {
-    IndexedMap<Integer, Animal> map = new IndexedHashMap<>();
+    IndexedMap<Id, Animal> map = new IndexedHashMap<>();
+    Id id = new Id(42);
 
-    map.insert(42, dog);
+    map.insert(id, dog);
 
-    assertThat(map.select(42), is(Optional.of(dog)));
+    assertThat(map.select(id), is(Optional.of(dog)));
   }
 
   @Test
   public void insertNewItemReturnsEmptyOptional() {
-    IndexedMap<Integer, Animal> map = new IndexedHashMap<>();
+    IndexedMap<Id, Animal> map = new IndexedHashMap<>();
+    Id id = new Id(42);
 
-    Optional<Animal> previous = map.insert(42, dog);
+    Optional<Animal> previous = map.insert(id, dog);
 
     assertThat(previous, is((Optional.empty())));
   }
 
   @Test
   public void deleteWithoutPreviousItemReturnsEmpty() {
-    IndexedMap<Integer, Animal> map = new IndexedHashMap<>();
+    IndexedMap<Id, Animal> map = new IndexedHashMap<>();
+    Id id = new Id(42);
 
-    Optional<Animal> previous = map.delete(42);
+    Optional<Animal> previous = map.delete(id);
 
     assertThat(previous, is(Optional.empty()));
   }
 
   @Test
   public void deleteWithPreviousItemReturnsPrevious() {
-    IndexedMap<Integer, Animal> map = new IndexedHashMap<>();
+    IndexedMap<Id, Animal> map = new IndexedHashMap<>();
+    Id id = new Id(53);
 
-    map.insert(53, dog);
-    Optional<Animal> previous = map.delete(53);
+    map.insert(id, dog);
+    Optional<Animal> previous = map.delete(id);
 
     assertThat(previous, is((Optional.of(dog))));
   }
 
   @Test
   public void indexByUnknownFoodReturnsNoAnimals() {
-    IndexedMap<Integer, Animal> map = mapWithAnimals();
+    IndexedMap<Id, Animal> map = mapWithAnimals();
 
-    Function<String, Map<Integer, Animal>> index =
+    Function<String, Map<Id, Animal>> index =
           map.addIndex((id, a) -> a.foods);
 
     assertThat(index.apply("sausage"), equalTo(map()));
@@ -78,9 +83,9 @@ public class IndexedMapTest {
 
   @Test
   public void animalsAreIndexedByDifferentFoods() {
-    IndexedMap<Integer, Animal> map = mapWithAnimals();
+    IndexedMap<Id, Animal> map = mapWithAnimals();
 
-    Function<String, Map<Integer, Animal>> index =
+    Function<String, Map<Id, Animal>> index =
           map.addIndex((id, a) -> a.foods);
 
     assertThat(index.apply("biscuits"), equalTo(map(cat, dog)));
@@ -94,9 +99,9 @@ public class IndexedMapTest {
 
   @Test
   public void indexingBySingleValueAttributeIsPossible() {
-    IndexedMap<Integer, Animal> map = mapWithAnimals();
+    IndexedMap<Id, Animal> map = mapWithAnimals();
 
-    Function<Integer, Map<Integer, Animal>> index =
+    Function<Integer, Map<Id, Animal>> index =
           map.addIndex((id, a) -> singleton(a.legs));
 
     assertThat(index.apply(0), equalTo(map()));
@@ -106,21 +111,21 @@ public class IndexedMapTest {
 
   @Test
   public void whenRemovingAnimalsTheIndexShouldBeUpdated() {
-    IndexedMap<Integer, Animal> map = new IndexedHashMap<>();
+    IndexedMap<Id, Animal> map = new IndexedHashMap<>();
 
     map.insert(cat.id, cat);
     map.insert(dog.id, dog);
-    Function<Integer, Map<Integer, Animal>> index = map.addIndex((id, a) -> singleton(a.legs));
+    Function<Integer, Map<Id, Animal>> index = map.addIndex((id, a) -> singleton(a.legs));
     map.delete(dog.id);
     map.delete(cat.id);
 
-    assertThat(index.apply(4), sameInstance(Collections.<Integer, Animal>emptyMap()));
+    assertThat(index.apply(4), sameInstance(Collections.<Id, Animal>emptyMap()));
   }
 
   @Test
   public void whenRemovingLastIndexedValueIndexShouldIndicateNoAnimals() {
-    IndexedMap<Integer, Animal> map = mapWithAnimals();
-    Function<String, Map<Integer, Animal>> index = map.addIndex((id, a) -> a.foods);
+    IndexedMap<Id, Animal> map = mapWithAnimals();
+    Function<String, Map<Id, Animal>> index = map.addIndex((id, a) -> a.foods);
 
     map.delete(cat.id);
     map.delete(dog.id);
@@ -130,8 +135,8 @@ public class IndexedMapTest {
 
   @Test
   public void insertingNewAnimalShouldUpdateIndex() {
-    IndexedMap<Integer, Animal> map = mapWithAnimals();
-    Function<String, Map<Integer, Animal>> index = map.addIndex((id, a) -> a.foods);
+    IndexedMap<Id, Animal> map = mapWithAnimals();
+    Function<String, Map<Id, Animal>> index = map.addIndex((id, a) -> a.foods);
 
     map.insert(dog.id, woundedDog);
 
@@ -141,9 +146,9 @@ public class IndexedMapTest {
 
   @Test
   public void dynamicallyAddedIndexShouldSeePreexistingValues() {
-    IndexedMap<Integer, Animal> map = mapWithAnimals();
+    IndexedMap<Id, Animal> map = mapWithAnimals();
 
-    Function<Integer, Map<Integer, Animal>> index =
+    Function<Integer, Map<Id, Animal>> index =
           map.addIndex((id, a) -> singleton(a.legs));
 
     assertThat(
@@ -152,8 +157,8 @@ public class IndexedMapTest {
   }
 
 
-  private IndexedMap<Integer, Animal> mapWithAnimals() {
-    IndexedMap<Integer, Animal> map = new IndexedHashMap<>();
+  private IndexedMap<Id, Animal> mapWithAnimals() {
+    IndexedMap<Id, Animal> map = new IndexedHashMap<>();
     map.insert(dog.id, dog);
     map.insert(cat.id, cat);
     map.insert(cow.id, cow);

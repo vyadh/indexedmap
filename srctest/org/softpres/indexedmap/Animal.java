@@ -7,12 +7,12 @@ import java.util.Set;
  */
 class Animal {
 
-  final int id;
+  final Id id;
   final String name;
   final int legs;
   final Set<String> foods;
 
-  Animal(int id, String name, int legs, Set<String> foods) {
+  Animal(Id id, String name, int legs, Set<String> foods) {
     this.id = id;
     this.name = name;
     this.legs = legs;
