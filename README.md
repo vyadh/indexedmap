@@ -31,7 +31,8 @@ map.put(2, cat);
 map.put(3, fish);
 
 // Secondary index definition
-Function<Food, Map<Integer, Animal> indexByFood = map.addIndex((id, animal) -> animal.foods());
+Function<Food, Map<Integer, Animal>> indexByFood =
+  map.addIndex((id, animal) -> animal.foods());
 
 // Index lookup
 Collection<Animal> biscuitEaters = indexByFood.apply(food("biscuits"));
