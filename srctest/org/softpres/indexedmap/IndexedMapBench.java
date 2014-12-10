@@ -33,21 +33,21 @@ public class IndexedMapBench {
   }
 
   private void newName(Integer id) {
-    User before = users.get(id).orElse(new User(id, "John Doe", emptySet()));
+    User before = users.select(id).orElse(new User(id, "John Doe", emptySet()));
     User after = new User(id, pick(topBabyNames), before.likes);
-    users.put(id, after);
+    users.insert(id, after);
   }
 
   private void newLikes(Integer id) {
-    User before = users.get(id).orElse(new User(id, "John Doe", emptySet()));
+    User before = users.select(id).orElse(new User(id, "John Doe", emptySet()));
     User after = new User(id, before.name, new HashSet<>(Arrays.asList(pick(languages), pick(sports))));
-    users.put(id, after);
+    users.insert(id, after);
   }
 
   private void randomOp() {
     int percent = rand.nextInt(100);
     if (percent < 10) {
-      users.get(rand.nextInt(numIDs));
+      users.select(rand.nextInt(numIDs));
     }
     else if (percent < 40) {
       byName.apply(pick(topBabyNames));

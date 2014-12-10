@@ -56,34 +56,34 @@ public class IndexedMapTest {
   }
 
   @Test
-  public void putReplacesPreviousItem() {
-    map.put(42, cat);
-    Optional<Animal> previous = map.put(42, dog);
+  public void insertReplacesPreviousItem() {
+    map.insert(42, cat);
+    Optional<Animal> previous = map.insert(42, dog);
     assertThat(previous, is(Optional.of(cat)));
   }
 
   @Test
-  public void gettingItemThatHasBeenPreviouslyPut() {
-    map.put(42, dog);
-    assertThat(map.get(42), is(Optional.of(dog)));
+  public void selectingItemThatHasBeenPreviouslyInserted() {
+    map.insert(42, dog);
+    assertThat(map.select(42), is(Optional.of(dog)));
   }
 
   @Test
-  public void putNewItemReturnsEmptyOptional() {
-    Optional<Animal> previous = map.put(42, dog);
+  public void insertNewItemReturnsEmptyOptional() {
+    Optional<Animal> previous = map.insert(42, dog);
     assertThat(previous, is((Optional.empty())));
   }
 
   @Test
-  public void removeWithoutPreviousItemReturnsEmpty() {
-    Optional<Animal> previous = map.remove(42);
+  public void deleteWithoutPreviousItemReturnsEmpty() {
+    Optional<Animal> previous = map.delete(42);
     assertThat(previous, is(Optional.empty()));
   }
 
   @Test
-  public void removeWithPreviousItemReturnsPrevious() {
-    map.put(53, dog);
-    Optional<Animal> previous = map.remove(53);
+  public void deleteWithPreviousItemReturnsPrevious() {
+    map.insert(53, dog);
+    Optional<Animal> previous = map.delete(53);
     assertThat(previous, is((Optional.of(dog))));
   }
 
@@ -119,11 +119,11 @@ public class IndexedMapTest {
 
   @Test
   public void whenRemovingAnimalsTheIndexShouldBeUpdated() {
-    map.put(cat.id, cat);
-    map.put(dog.id, dog);
+    map.insert(cat.id, cat);
+    map.insert(dog.id, dog);
     Function<Integer, Map<Integer, Animal>> index = map.addIndex((id, a) -> singleton(a.legs));
-    map.remove(dog.id);
-    map.remove(cat.id);
+    map.delete(dog.id);
+    map.delete(cat.id);
 
     assertThat(index.apply(4), sameInstance(Collections.<Integer, Animal>emptyMap()));
   }
@@ -131,16 +131,16 @@ public class IndexedMapTest {
   @Test
   public void whenRemovingLastIndexedValueIndexShouldIndicateNoAnimals() {
     Function<String, Map<Integer, Animal>> index = indexAnimalsBy((id, a) -> a.foods);
-    map.remove(cat.id);
-    map.remove(dog.id);
+    map.delete(cat.id);
+    map.delete(dog.id);
 
     assertThat(index.apply("biscuits"), equalTo(map()));
   }
 
   @Test
-  public void puttingNewAnimalShouldUpdateIndex() {
+  public void insertingNewAnimalShouldUpdateIndex() {
     Function<String, Map<Integer, Animal>> index = indexAnimalsBy((id, a) -> a.foods);
-    map.put(dog.id, woundedDog);
+    map.insert(dog.id, woundedDog);
 
     assertThat(index.apply("biscuits"), equalTo(map(cat)));
     assertThat(index.apply("medicine"), equalTo(map(woundedDog)));
@@ -148,7 +148,7 @@ public class IndexedMapTest {
 
   @Test
   public void dynamicallyAddedIndexShouldSeePreexistingValues() {
-    putAllAnimals();
+    insertAllAnimals();
 
     Function<Integer, Map<Integer, Animal>> index = map.addIndex((id, a) -> singleton(a.legs));
 
@@ -166,7 +166,7 @@ public class IndexedMapTest {
   private <T> Function<T, Map<Integer, Animal>> indexAnimalsBy(
         BiFunction<Integer, Animal, Iterable<T>> f) {
 
-    putAllAnimals();
+    insertAllAnimals();
     return map.addIndex(f);
   }
 
@@ -178,12 +178,12 @@ public class IndexedMapTest {
     return result;
   }
 
-  private void putAllAnimals() {
-    map.put(dog.id, dog);
-    map.put(cat.id, cat);
-    map.put(cow.id, cow);
-    map.put(sheep.id, sheep);
-    map.put(bird.id, bird);
+  private void insertAllAnimals() {
+    map.insert(dog.id, dog);
+    map.insert(cat.id, cat);
+    map.insert(cow.id, cow);
+    map.insert(sheep.id, sheep);
+    map.insert(bird.id, bird);
   }
 
 }

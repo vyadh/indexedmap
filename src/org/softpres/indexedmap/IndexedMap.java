@@ -35,7 +35,7 @@ public interface IndexedMap<K, V> {
    * @param key to lookup the value in primary index.
    * @return the value associated, if one exists
    */
-  Optional<V> get(K key);
+  Optional<V> select(K key);
 
   /**
    * Add or replace an entry for this key in the primary index, and update all secondary
@@ -45,7 +45,7 @@ public interface IndexedMap<K, V> {
    * @param value new or replacement value to be associated
    * @return the previous value, if one existed
    */
-  Optional<V> put(K key, V value);
+  Optional<V> insert(K key, V value);
 
   /**
    * Remove the entry in the primary index with the specified key, and update any secondary
@@ -54,7 +54,7 @@ public interface IndexedMap<K, V> {
    * @param key for the entry to remove
    * @return the previous value, if one existed
    */
-  Optional<V> remove(K key);
+  Optional<V> delete(K key);
 
   /**
    * Add a secondary index to this map. The secondary index is creating using the supplied function,

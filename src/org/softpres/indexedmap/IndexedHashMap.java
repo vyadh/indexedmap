@@ -15,14 +15,14 @@ public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
   private final List<Index<?>> indices = new LinkedList<>();
 
   @Override
-  public Optional<V> get(K key) {
+  public Optional<V> select(K key) {
     Objects.requireNonNull(key);
 
     return Optional.ofNullable(contents.get(key));
   }
 
   @Override
-  public Optional<V> put(K key, V value) {
+  public Optional<V> insert(K key, V value) {
     Objects.requireNonNull(key);
     Objects.requireNonNull(value);
 
@@ -39,7 +39,7 @@ public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
   }
 
   @Override
-  public Optional<V> remove(K key) {
+  public Optional<V> delete(K key) {
     Objects.requireNonNull(key);
 
     Optional<V> previous = Optional.ofNullable(contents.remove(key));

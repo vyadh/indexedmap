@@ -20,15 +20,29 @@ IndexedMap has no runtime dependencies other than Java 8.
 Usage
 -----
 
+This library contains a simplified Map-like interface IndexedMap. It is not
+intended to be used as a general-purpose map, but may very well be extended
+to implement all of `java.util.Map` in the future.
+
+To allow this to happen, alternative methods making use of `Optional` are
+provided, as future siblings to the null-using `java.util.Map` versions.
+
+* `insert` is the alternative to `put`
+* `select` is the alternative to `get`
+* `delete` is the alternative to `remove`
+
+Example
+-------
+
 ```java
 Animal dog = new Animal("Dog").withFoods("rabbit", "biscuits");
 Animal cat = new Animal("Cat").withFoods("fish", "biscuits");
 Animal fish = new Animal("Fish").withFoods("plankton");
 
 IndexedMap<Integer, Animal> map = new IndexedMap<>();
-map.put(1, dog);
-map.put(2, cat);
-map.put(3, fish);
+map.insert(1, dog);
+map.insert(2, cat);
+map.insert(3, fish);
 
 // Secondary index definition
 Function<Food, Map<Integer, Animal>> indexByFood =
@@ -46,12 +60,8 @@ assertEquals(
 Implementation
 --------------
 
-This library contains a simplified Map-like interface IndexedMap. It is not
-intended to be used as a general-purpose map, but may very well be extended
-to implement all of `java.util.Map` in the future.
-
-There is currently one implementation IndexedHashMap, where the primary index,
-and added secondary indexes are backed by a normal `java.util.HashMap`.
+There is currently one implementation `IndexedHashMap`, where the primary
+index, and added secondary indexes are backed by a normal `java.util.HashMap`.
 
 Mutable Values
 --------------
