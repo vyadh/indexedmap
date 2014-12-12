@@ -185,7 +185,10 @@ public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
 
   @Override
   public void clear() {
-
+    contents.clear();
+    for (Index<?> index : indices) {
+      index.mapping.clear();
+    }
   }
 
 }

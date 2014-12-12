@@ -6,7 +6,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.*;
+import java.util.function.Function;
 
+import static java.util.Collections.singleton;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
@@ -88,6 +90,36 @@ public class IndexedMapTest {
 
     assertThat(putKeys, is(Arrays.asList(dog.id, cat.id, fish.id)));
     assertThat(putValues, is(Arrays.asList(dog, cat, fish)));
+  }
+
+  @Test
+  public void clearRemovesAllEntries() throws Exception {
+    IndexedMap<Id, Animal> map = new IndexedHashMap<>();
+    map.put(dog.id, dog);
+    map.put(cat.id, cat);
+
+    map.clear();
+
+    assertThat(map.isEmpty(), is(true));
+  }
+
+  @Test
+  public void clearRemovesAllItemsFromExistingIndexes() throws Exception {
+    // Given
+    IndexedMap<Id, Animal> map = new IndexedHashMap<>();
+    map.put(dog.id, dog);
+    map.put(cat.id, cat);
+    map.put(sheep.id, sheep);
+    // And
+    Function<String, Map<Id, Animal>> byFood = map.addIndex((id, a) -> a.foods);
+    Function<Integer, Map<Id, Animal>> byLegs = map.addIndex((id, a) -> singleton(a.legs));
+
+    // When
+    map.clear();
+
+    // Then
+    assertThat(byFood.apply("biscuits").isEmpty(), is(true));
+    assertThat(byLegs.apply(4).isEmpty(), is(true));
   }
 
   @Test
