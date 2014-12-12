@@ -46,6 +46,24 @@ public class IndexedMapTest {
   }
 
   @Test
+  public void containsKeysWhenInTheMap() throws Exception {
+    IndexedHashMap<Id, Animal> map = new IndexedHashMap<>();
+    map.insert(dog.id, dog);
+
+    assertThat(map.containsKey(cat.id), is(false));
+    assertThat(map.containsKey(dog.id), is(true));
+  }
+
+  @Test
+  public void containsValuesWhenInTheMap() throws Exception {
+    IndexedHashMap<Id, Animal> map = new IndexedHashMap<>();
+    map.insert(cat.id, cat);
+
+    assertThat(map.containsValue(dog), is(false));
+    assertThat(map.containsValue(cat), is(true));
+  }
+
+  @Test
   public void removeUsingObjectTypeThatIsNotValidKeyTypeReturnsNull() {
     IndexedMap<Id, Animal> map = new IndexedHashMap<>();
 

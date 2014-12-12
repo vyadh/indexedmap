@@ -168,12 +168,12 @@ public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
 
   @Override
   public boolean containsKey(Object key) {
-    return false;
+    return contents.containsKey(key);
   }
 
   @Override
   public boolean containsValue(Object value) {
-    return false;
+    return contents.containsValue(value);
   }
 
   @Override
