@@ -1,9 +1,6 @@
 package org.softpres.indexedmap;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Helper animal methods for tests.
@@ -20,7 +17,7 @@ class Animals {
   static final Animal woundedDog = new Animal(new Id(1), "Dog", 3, foods("medicine"));
 
   static Map<Id, Animal> map(Animal... animals) {
-    HashMap<Id, Animal> result = new HashMap<>();
+    HashMap<Id, Animal> result = new LinkedHashMap<>();
     for (Animal animal : animals) {
       result.put(animal.id, animal);
     }

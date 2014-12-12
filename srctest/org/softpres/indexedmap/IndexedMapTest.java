@@ -5,13 +5,12 @@ package org.softpres.indexedmap;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.Collections;
+import java.util.*;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.softpres.indexedmap.Animals.cat;
-import static org.softpres.indexedmap.Animals.dog;
+import static org.softpres.indexedmap.Animals.*;
 
 /**
  * Unit tests for basic operations on {@link org.softpres.indexedmap.IndexedHashMap}.
@@ -70,6 +69,25 @@ public class IndexedMapTest {
     Animal previous = map.remove(new Object());
 
     assertThat(previous, nullValue());
+  }
+
+  @Test
+  public void putAllJustCallsPutForEveryEntry() throws Exception {
+    List<Id> putKeys = new ArrayList<>();
+    List<Animal> putValues = new ArrayList<>();
+
+    IndexedMap<Id, Animal> map = new IndexedHashMap<Id, Animal>() {
+      public Animal put(Id key, Animal value) {
+        putKeys.add(key);
+        putValues.add(value);
+        return super.put(key, value);
+      }
+    };
+
+    map.putAll(map(dog, cat, fish));
+
+    assertThat(putKeys, is(Arrays.asList(dog.id, cat.id, fish.id)));
+    assertThat(putValues, is(Arrays.asList(dog, cat, fish)));
   }
 
   @Test
