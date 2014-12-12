@@ -147,6 +147,16 @@ public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
   }
 
   @Override
+  public Set<K> keySet() {
+    return Collections.unmodifiableSet(contents.keySet());
+  }
+
+  @Override
+  public Collection<V> values() {
+    return Collections.unmodifiableCollection(contents.values());
+  }
+
+  @Override
   public int size() {
     return 0;
   }
@@ -174,16 +184,6 @@ public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
   @Override
   public void clear() {
 
-  }
-
-  @Override
-  public Set<K> keySet() {
-    return null;
-  }
-
-  @Override
-  public Collection<V> values() {
-    return null;
   }
 
 }

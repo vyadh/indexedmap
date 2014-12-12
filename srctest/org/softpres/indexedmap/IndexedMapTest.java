@@ -21,33 +21,6 @@ import static org.softpres.indexedmap.Animals.fish;
 public class IndexedMapTest {
 
   @Test
-  public void entrySetReturnsEntireContentsOfMap() {
-    IndexedMap<Id, Animal> map = new IndexedHashMap<>();
-
-    map.insert(fish.id, fish);
-    map.insert(cat.id, cat);
-    map.insert(dog.id, dog);
-
-    assertThat(map.entrySet(), is(map(dog, cat, fish).entrySet()));
-  }
-
-  @Test (expected = UnsupportedOperationException.class)
-  public void doNotAllowClearOfTheEntrySet() {
-    IndexedMap<Id, Animal> map = new IndexedHashMap<>();
-
-    map.entrySet().clear();
-  }
-
-  @Test (expected = UnsupportedOperationException.class)
-  public void doNotAllowModificationOfTheEntrySetIterator() {
-    IndexedMap<Id, Animal> map = new IndexedHashMap<>();
-
-    map.insert(fish.id, fish);
-
-    map.entrySet().iterator().remove();
-  }
-
-  @Test
   public void removeUsingObjectTypeThatIsNotValidKeyTypeReturnsNull() {
     IndexedMap<Id, Animal> map = new IndexedHashMap<>();
 
