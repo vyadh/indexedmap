@@ -10,15 +10,40 @@ import java.util.Collections;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.softpres.indexedmap.Animals.map;
 import static org.softpres.indexedmap.Animals.cat;
 import static org.softpres.indexedmap.Animals.dog;
-import static org.softpres.indexedmap.Animals.fish;
 
 /**
  * Unit tests for basic operations on {@link org.softpres.indexedmap.IndexedHashMap}.
  */
 public class IndexedMapTest {
+
+  @Test
+  public void sizeIsZeroWhenEmpty() throws Exception {
+    assertThat(new IndexedHashMap<Id, Animal>().size(), is(0));
+  }
+
+  @Test
+  public void sizeReflectsItemsInTheMap() throws Exception {
+    IndexedHashMap<Id, Animal> map = new IndexedHashMap<>();
+    map.insert(dog.id, dog);
+    map.insert(cat.id, cat);
+
+    assertThat(map.size(), is(2));
+  }
+
+  @Test
+  public void isEmptyIsTrueWithNoEntries() throws Exception {
+    assertThat(new IndexedHashMap<Id, Animal>().isEmpty(), is(true));
+  }
+
+  @Test
+  public void isEmptyIsFalseWithoutEntries() throws Exception {
+    IndexedHashMap<Id, Animal> map = new IndexedHashMap<>();
+    map.insert(dog.id, dog);
+
+    assertThat(map.isEmpty(), is(false));
+  }
 
   @Test
   public void removeUsingObjectTypeThatIsNotValidKeyTypeReturnsNull() {

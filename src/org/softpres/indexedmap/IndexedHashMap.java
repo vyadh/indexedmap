@@ -158,12 +158,12 @@ public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
 
   @Override
   public int size() {
-    return 0;
+    return contents.size();
   }
 
   @Override
   public boolean isEmpty() {
-    return false;
+    return contents.isEmpty();
   }
 
   @Override
