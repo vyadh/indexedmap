@@ -3,12 +3,14 @@
 package org.softpres.indexedmap;
 
 import org.junit.Test;
+import org.softpres.animal.Animal;
+import org.softpres.animal.Id;
 
 import java.util.HashSet;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.softpres.indexedmap.Animals.*;
+import static org.softpres.animal.Animals.*;
 
 /**
  * Unit tests for basic operations on {@link IndexedHashMap}.

@@ -1,13 +1,13 @@
-package org.softpres.indexedmap;
+package org.softpres.animal;
 
 /**
  * Animal id.
  */
-class Id {
+public class Id {
 
   private final int value;
 
-  Id(int value) {
+  public Id(int value) {
     this.value = value;
   }
 
