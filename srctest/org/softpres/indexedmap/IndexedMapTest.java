@@ -22,12 +22,12 @@ import static org.softpres.animal.Animals.*;
 public class IndexedMapTest {
 
   @Test
-  public void sizeIsZeroWhenEmpty() throws Exception {
+  public void sizeIsZeroWhenEmpty() {
     assertThat(new IndexedHashMap<Id, Animal>().size(), is(0));
   }
 
   @Test
-  public void sizeReflectsItemsInTheMap() throws Exception {
+  public void sizeReflectsItemsInTheMap() {
     IndexedHashMap<Id, Animal> map = new IndexedHashMap<>();
     map.insert(dog.id, dog);
     map.insert(cat.id, cat);
@@ -36,12 +36,12 @@ public class IndexedMapTest {
   }
 
   @Test
-  public void isEmptyIsTrueWithNoEntries() throws Exception {
+  public void isEmptyIsTrueWithNoEntries() {
     assertThat(new IndexedHashMap<Id, Animal>().isEmpty(), is(true));
   }
 
   @Test
-  public void isEmptyIsFalseWithoutEntries() throws Exception {
+  public void isEmptyIsFalseWithoutEntries() {
     IndexedHashMap<Id, Animal> map = new IndexedHashMap<>();
     map.insert(dog.id, dog);
 
@@ -49,7 +49,7 @@ public class IndexedMapTest {
   }
 
   @Test
-  public void containsKeysWhenInTheMap() throws Exception {
+  public void containsKeysWhenInTheMap() {
     IndexedHashMap<Id, Animal> map = new IndexedHashMap<>();
     map.insert(dog.id, dog);
 
@@ -58,7 +58,7 @@ public class IndexedMapTest {
   }
 
   @Test
-  public void containsValuesWhenInTheMap() throws Exception {
+  public void containsValuesWhenInTheMap() {
     IndexedHashMap<Id, Animal> map = new IndexedHashMap<>();
     map.insert(cat.id, cat);
 
@@ -76,7 +76,7 @@ public class IndexedMapTest {
   }
 
   @Test
-  public void putAllJustCallsPutForEveryEntry() throws Exception {
+  public void putAllJustCallsPutForEveryEntry() {
     List<Id> putKeys = new ArrayList<>();
     List<Animal> putValues = new ArrayList<>();
 
@@ -95,7 +95,7 @@ public class IndexedMapTest {
   }
 
   @Test
-  public void clearRemovesAllEntries() throws Exception {
+  public void clearRemovesAllEntries() {
     IndexedMap<Id, Animal> map = new IndexedHashMap<>();
     map.put(dog.id, dog);
     map.put(cat.id, cat);
@@ -106,7 +106,7 @@ public class IndexedMapTest {
   }
 
   @Test
-  public void clearRemovesAllItemsFromExistingIndexes() throws Exception {
+  public void clearRemovesAllItemsFromExistingIndexes() {
     // Given
     IndexedMap<Id, Animal> map = new IndexedHashMap<>();
     map.put(dog.id, dog);

@@ -11,8 +11,16 @@ import java.util.function.Function;
  */
 public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
 
-  private final HashMap<K, V> contents = new HashMap<>();
+  private final Map<K, V> primary;
   private final List<Index<?>> indices = new LinkedList<>();
+
+  IndexedHashMap() {
+    primary = new HashMap<>();
+  }
+
+  public IndexedHashMap(Map<K, V> primary) {
+    this.primary = primary;
+  }
 
   @Override
   public Optional<V> select(K key) {
@@ -23,7 +31,7 @@ public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
   public V get(Object key) {
     Objects.requireNonNull(key);
 
-    return contents.get(key);
+    return primary.get(key);
   }
 
   @Override
@@ -36,7 +44,7 @@ public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
     Objects.requireNonNull(key);
     Objects.requireNonNull(value);
 
-    V previous = contents.put(key, value);
+    V previous = primary.put(key, value);
     if (previous != null) {
       removeFromIndex(key, previous);
     }
@@ -57,7 +65,7 @@ public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
   public Optional<V> delete(K key) {
     Objects.requireNonNull(key);
 
-    Optional<V> previous = Optional.ofNullable(contents.remove(key));
+    Optional<V> previous = Optional.ofNullable(primary.remove(key));
     if (previous.isPresent()) {
       removeFromIndex(key, previous.get());
     }
@@ -80,7 +88,7 @@ public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
     Objects.requireNonNull(view);
 
     Index<I> index = new Index<>(view);
-    for (java.util.Map.Entry<K, V> entry : contents.entrySet()) {
+    for (java.util.Map.Entry<K, V> entry : primary.entrySet()) {
       index.add(entry.getKey(), entry.getValue());
     }
     indices.add(index);
@@ -143,37 +151,37 @@ public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
    */
   @Override
   public Set<Map.Entry<K, V>> entrySet() {
-    return Collections.unmodifiableSet(contents.entrySet());
+    return Collections.unmodifiableSet(primary.entrySet());
   }
 
   @Override
   public Set<K> keySet() {
-    return Collections.unmodifiableSet(contents.keySet());
+    return Collections.unmodifiableSet(primary.keySet());
   }
 
   @Override
   public Collection<V> values() {
-    return Collections.unmodifiableCollection(contents.values());
+    return Collections.unmodifiableCollection(primary.values());
   }
 
   @Override
   public int size() {
-    return contents.size();
+    return primary.size();
   }
 
   @Override
   public boolean isEmpty() {
-    return contents.isEmpty();
+    return primary.isEmpty();
   }
 
   @Override
   public boolean containsKey(Object key) {
-    return contents.containsKey(key);
+    return primary.containsKey(key);
   }
 
   @Override
   public boolean containsValue(Object value) {
-    return contents.containsValue(value);
+    return primary.containsValue(value);
   }
 
   @Override
@@ -185,7 +193,7 @@ public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
 
   @Override
   public void clear() {
-    contents.clear();
+    primary.clear();
     for (Index<?> index : indices) {
       index.mapping.clear();
     }
