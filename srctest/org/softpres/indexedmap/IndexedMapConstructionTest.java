@@ -21,7 +21,8 @@ public class IndexedMapConstructionTest {
   @Test
   public void initialValuesAreAccessibleFromPrimary() {
     Map<Id, Animal> initial = map(dog, cat);
-    IndexedHashMap<Id, Animal> map = new IndexedHashMap<>(initial);
+    IndexedMap<Id, Animal> map = new IndexedMapBuilder<Id, Animal>()
+          .primary(initial).build();
 
     assertThat(map.get(dog.id), is(dog));
     assertThat(map.get(cat.id), is(cat));
@@ -30,7 +31,8 @@ public class IndexedMapConstructionTest {
   @Test
   public void initialValuesAreStillIndexed() {
     Map<Id, Animal> initial = map(dog, cat);
-    IndexedHashMap<Id, Animal> map = new IndexedHashMap<>(initial);
+    IndexedMap<Id, Animal> map = new IndexedMapBuilder<Id, Animal>()
+          .primary(initial).build();
     Function<String, Map<Id, Animal>> byFood = map.addIndex((id, a) -> a.foods);
 
     assertThat(byFood.apply("rabbit"), is(map(dog)));

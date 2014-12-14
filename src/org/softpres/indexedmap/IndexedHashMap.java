@@ -8,6 +8,11 @@ import java.util.function.Function;
 
 /**
  * An {@link IndexedMap} backed by {@link HashMap} instances.
+ * <p/>
+ * This class may or may not be thread-safe based on the locking strategy
+ * used. However, iterations through the map, meaning {@link #entrySet()},
+ * {@link #keySet()} and {@link #values()} must be done externally
+ * surrounded by the {@link #withReadLock(Runnable)} method.
  */
 public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
 
@@ -15,7 +20,7 @@ public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
   private final List<Index<?>> indices = new LinkedList<>();
 
   IndexedHashMap() {
-    primary = new HashMap<>();
+    this(new HashMap<>());
   }
 
   IndexedHashMap(Map<K, V> primary) {
@@ -88,10 +93,12 @@ public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
     Objects.requireNonNull(view);
 
     Index<I> index = new Index<>(view);
+
     for (java.util.Map.Entry<K, V> entry : primary.entrySet()) {
       index.add(entry.getKey(), entry.getValue());
     }
     indices.add(index);
+
     return index;
   }
 
@@ -144,11 +151,6 @@ public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
 
   }
 
-  /**
-   * Provide a snapshot of the current contents of the map.
-   * This could be achieved using an index, but that would affect
-   * the performance of normal operations.
-   */
   @Override
   public Set<Map.Entry<K, V>> entrySet() {
     return Collections.unmodifiableSet(primary.entrySet());
@@ -197,6 +199,10 @@ public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
     for (Index<?> index : indices) {
       index.mapping.clear();
     }
+  }
+
+  public void withReadLock(Runnable runnable) {
+    runnable.run();
   }
 
 }

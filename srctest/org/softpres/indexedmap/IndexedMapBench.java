@@ -3,6 +3,8 @@
 package org.softpres.indexedmap;
 
 import java.util.*;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -15,7 +17,14 @@ import static java.util.Collections.singleton;
  */
 public class IndexedMapBench {
 
-  private final IndexedMap<Integer, User> users = new IndexedHashMap<>();
+  private static final ReadWriteLock lockStrategy = new ReentrantReadWriteLock();
+//  private static final ReadWriteLock lockStrategy = new NoReadWriteLock();
+
+  private final IndexedMap<Integer, User> users = new IndexedMapBuilder<Integer, User>()
+        .primary(new HashMap<>(4096))
+        .lockStrategy(lockStrategy)
+        .build();
+
   private final Function<String, Map<Integer, User>> byName = users.addIndex((id, u) -> singleton(u.name));
   private final Function<String, Map<Integer, User>> byLike = users.addIndex((id, u) -> u.likes);
 
@@ -111,15 +120,23 @@ public class IndexedMapBench {
     IndexedMapBench bench = new IndexedMapBench();
     bench.populate();
 
-    for (int pass = 0; pass < 5; pass++) {
-      for (int threads : Arrays.asList(1)) {
-        long elapsed = bench.run(threads, 1_000_000 / threads);
+    for (int threads : threadBatches()) {
+      for (int pass = 0; pass < 3; pass++) {
+        long elapsed = bench.run(threads, 10_000_000 / threads);
         System.out.printf("%d thread(s): %4.2f usec/op total throughput (80%% read)\n",
               threads, elapsed * 0.001);
       }
     }
 
     System.out.println("Done");
+  }
+
+  private static List<Integer> threadBatches() {
+    if (lockStrategy.getClass() == NoReadWriteLock.class) {
+      return Arrays.asList(1);
+    } else {
+      return Arrays.asList(1, 2, 4, 8);
+    }
   }
 
   private static class User {

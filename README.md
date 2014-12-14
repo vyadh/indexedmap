@@ -5,17 +5,16 @@ An in-memory map that works a little like a database table with indices. A
 secondary index can be added on demand to provide fast lookups by providing
 the indexing strategy via a simple Java 8 lambda expression.
 
-This is inspired by [ScalaSTM][1]'s `IndexedMap`, but for single-threaded usage.
-It could also serve as a migration path towards ScalaSTM if multi-thread usage is
-later required (ScalaSTM provides an alternative Java-friendly API).
+This is inspired by [ScalaSTM][1]'s `IndexedMap`, but most suitable for
+single-threaded usage. It could also serve as a migration path towards
+ScalaSTM if multi-thread usage is later required (ScalaSTM provides an
+alternative Java-friendly API). IndexedMap can be used in a multi-threaded
+context, but this looses any serializable transaction isolation capability.
 
 The intended use-case is to manage state for applications that have a fast,
 single threaded event processor for queries and updates. Practically this will
 usually mean a workload where operations are short-lived, or where long-running
-operations can be run externally to the state management.
-
-Some form of optional multi-threaded capability may be added in the future, but
-this will loose any serializable transaction isolation capability.
+operations can be run separately to the state management.
 
 Dependencies
 ------------
@@ -44,7 +43,8 @@ Animal dog = new Animal("Dog").withFoods("rabbit", "biscuits");
 Animal cat = new Animal("Cat").withFoods("fish", "biscuits");
 Animal fish = new Animal("Fish").withFoods("plankton");
 
-IndexedMap<Integer, Animal> map = new IndexedMap<>();
+IndexedMap<Integer, Animal> map = new IndexedMapBuilder<>().build();
+
 map.insert(1, dog);
 map.insert(2, cat);
 map.insert(3, fish);
@@ -78,19 +78,18 @@ transaction isolation guarantees. A ScalaSTM `TMap` can be used with an
 
 The `IndexedMap` implemented here provides no such guarantees. It may be possible
 to provide features to allow map operations to be staged until a commit phase,
-but this seems difficult to do in a pluggable fashion because we would also want
-to stage the secondary index updates.
+but this is non-trivial because we would also want to stage the secondary index
+updates (achieve snapshot MVCC).
 
 One workable strategy would be to design an application so that updates to the
 map all happen at the end of each operation. This would also fit in with any IO
 that needs to take place. The general idea being that all "risky" operations
 such as application processing and IO is done first, and the updates to the map
-(very unlikely to fail) can happen if everything else went well. This, in many
+(not likely to fail) can happen if everything else went well. This, in many
 applications, is likely good enough. For more advance requirements, there is
 ScalaSTM.
 
-Here is an example of how this might work with a write-ahead persistence
-strategy.
+Here is an example of how this might work.
 
 ```java
 interface ChangeCollector<K, V> {
@@ -127,9 +126,12 @@ class ExchangeAnimalOperation implements Operation<Integer, Animal> {
 
 The collected changes can then be played back on the `IndexedMap` at a time
 where there is no more unmanaged code to execute that may legitimately fail.
+Something that could be combined with a write-ahead persistence strategy for
+example, to complete the IO operation, and only then allow the collected
+changes to be applied.
 
 It puts more burden on the application programmer, but it might be good enough,
-or perhaps a few steps closer towards a ScalaSTM future.
+and perhaps a few steps closer towards a ScalaSTM future.
 
 Mutable Values
 --------------
