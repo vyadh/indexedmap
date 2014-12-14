@@ -14,6 +14,9 @@ single threaded event processor for queries and updates. Practically this will
 usually mean a workload where operations are short-lived, or where long-running
 operations can be run externally to the state management.
 
+Some form of optional multi-threaded capability may be added in the future, but
+this will loose any serializable transaction isolation capability.
+
 Dependencies
 ------------
 

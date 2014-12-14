@@ -18,7 +18,7 @@ public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
     primary = new HashMap<>();
   }
 
-  public IndexedHashMap(Map<K, V> primary) {
+  IndexedHashMap(Map<K, V> primary) {
     this.primary = primary;
   }
 

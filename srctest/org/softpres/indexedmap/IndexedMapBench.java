@@ -4,6 +4,7 @@ package org.softpres.indexedmap;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
@@ -69,25 +70,56 @@ public class IndexedMapBench {
     }
   }
 
-  private long run(int ops) {
+  private long run(int threadCount, int ops) {
+    Thread[] threads = tabulate(threadCount, () -> new Thread() {
+      public void run() {
+        for (int i = 0; i < ops; i++) {
+          randomOp();
+        }
+      }
+    });
+
     long begin = System.currentTimeMillis();
-
-    for (int i = 0; i < ops; i++) {
-      randomOp();
-    }
-
+    runToCompletion(threads);
     long end = System.currentTimeMillis();
     return end - begin;
+  }
+
+  private Thread[] tabulate(int threadCount, Supplier<Thread> factory) {
+    Thread[] threads = new Thread[threadCount];
+    for (int i = 0; i < threads.length; i++) {
+      threads[i] = factory.get();
+    }
+    return threads;
+  }
+
+  private void runToCompletion(Thread[] threads) {
+    for (Thread thread : threads) {
+      thread.start();
+    }
+
+    for (Thread thread : threads) {
+      try {
+        thread.join();
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
+    }
   }
 
   public static void main(String[] args) {
     IndexedMapBench bench = new IndexedMapBench();
     bench.populate();
 
-    for (int pass = 0; pass < 10; pass++) {
-      long elapsed = bench.run(10_000_000);
-      System.out.printf("%4.2f usec/op total throughput (80%% read)\n", elapsed * 0.001);
+    for (int pass = 0; pass < 5; pass++) {
+      for (int threads : Arrays.asList(1)) {
+        long elapsed = bench.run(threads, 1_000_000 / threads);
+        System.out.printf("%d thread(s): %4.2f usec/op total throughput (80%% read)\n",
+              threads, elapsed * 0.001);
+      }
     }
+
+    System.out.println("Done");
   }
 
   private static class User {
