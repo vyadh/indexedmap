@@ -3,13 +3,13 @@
 package org.softpres.indexedmap;
 
 import org.junit.Test;
-import org.softpres.animal.Animal;
-import org.softpres.animal.Id;
+import org.softpres.indexedmap.animal.Animal;
+import org.softpres.indexedmap.animal.Id;
 
 import java.util.*;
 import java.util.function.Function;
 
-import static org.softpres.animal.Animals.*;
+import static org.softpres.indexedmap.animal.Animals.*;
 import static java.util.Collections.singleton;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.core.IsEqual.equalTo;

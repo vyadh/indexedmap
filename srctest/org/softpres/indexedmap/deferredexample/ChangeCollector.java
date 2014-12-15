@@ -1,4 +1,4 @@
-package org.softpres.deferredexample;
+package org.softpres.indexedmap.deferredexample;
 
 interface ChangeCollector<K, V> {
 

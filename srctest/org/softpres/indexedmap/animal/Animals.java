@@ -1,4 +1,4 @@
-package org.softpres.animal;
+package org.softpres.indexedmap.animal;
 
 import java.util.*;
 

@@ -1,4 +1,4 @@
-package org.softpres.deferredexample;
+package org.softpres.indexedmap.deferredexample;
 
 import org.softpres.indexedmap.IndexedMap;
 

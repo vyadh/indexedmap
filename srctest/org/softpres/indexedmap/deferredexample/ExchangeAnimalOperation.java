@@ -1,7 +1,7 @@
-package org.softpres.deferredexample;
+package org.softpres.indexedmap.deferredexample;
 
-import org.softpres.animal.Animal;
-import org.softpres.animal.Id;
+import org.softpres.indexedmap.animal.Animal;
+import org.softpres.indexedmap.animal.Id;
 import org.softpres.indexedmap.IndexedMap;
 
 import java.util.Optional;

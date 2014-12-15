@@ -4,8 +4,8 @@ package org.softpres.indexedmap;
 
 import org.junit.Ignore;
 import org.junit.Test;
-import org.softpres.animal.Animal;
-import org.softpres.animal.Id;
+import org.softpres.indexedmap.animal.Animal;
+import org.softpres.indexedmap.animal.Id;
 
 import java.util.*;
 import java.util.function.Function;
@@ -14,7 +14,7 @@ import static java.util.Collections.singleton;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.softpres.animal.Animals.*;
+import static org.softpres.indexedmap.animal.Animals.*;
 
 /**
  * Unit tests for basic operations on {@link org.softpres.indexedmap.IndexedHashMap}.
