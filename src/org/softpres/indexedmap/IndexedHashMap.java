@@ -8,11 +8,6 @@ import java.util.function.Function;
 
 /**
  * An {@link IndexedMap} backed by {@link HashMap} instances.
- * <p/>
- * This class may or may not be thread-safe based on the locking strategy
- * used. However, iterations through the map, meaning {@link #entrySet()},
- * {@link #keySet()} and {@link #values()} must be done externally
- * surrounded by the {@link #withReadLock(Runnable)} method.
  */
 public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
 
@@ -199,10 +194,6 @@ public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
     for (Index<?> index : indices) {
       index.mapping.clear();
     }
-  }
-
-  public void withReadLock(Runnable runnable) {
-    runnable.run();
   }
 
 }

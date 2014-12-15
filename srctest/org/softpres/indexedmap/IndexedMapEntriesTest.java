@@ -3,9 +3,13 @@
 package org.softpres.indexedmap;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import org.softpres.indexedmap.animal.Animal;
 import org.softpres.indexedmap.animal.Id;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 
 import static org.hamcrest.core.Is.is;
@@ -15,12 +19,26 @@ import static org.softpres.indexedmap.animal.Animals.*;
 /**
  * Unit tests for basic operations on {@link IndexedHashMap}.
  */
+@RunWith(Parameterized.class)
 public class IndexedMapEntriesTest {
+
+  private final IndexedMap<Id, Animal> map;
+
+  public IndexedMapEntriesTest(IndexedMap<Id, Animal> map) {
+    this.map = map;
+  }
+
+  @Parameterized.Parameters
+  public static Collection<Object[]> data() {
+    return Arrays.asList(new Object[][] {
+          { new IndexedMapBuilder<>().build() },
+          { new IndexedMapBuilder<>()
+                .lockStrategy(new NoReadWriteLock()).build() }
+    });
+  }
 
   @Test
   public void entrySetReturnsEntireContentsOfMap() {
-    IndexedMap<Id, Animal> map = new IndexedHashMap<>();
-
     map.insert(fish.id, fish);
     map.insert(cat.id, cat);
     map.insert(dog.id, dog);
@@ -30,15 +48,11 @@ public class IndexedMapEntriesTest {
 
   @Test (expected = UnsupportedOperationException.class)
   public void entrySetDoesNotAllowClear() {
-    IndexedMap<Id, Animal> map = new IndexedHashMap<>();
-
     map.entrySet().clear();
   }
 
   @Test (expected = UnsupportedOperationException.class)
   public void entrySetIteratorDoesNotAllowRemove() {
-    IndexedMap<Id, Animal> map = new IndexedHashMap<>();
-
     map.insert(fish.id, fish);
 
     map.entrySet().iterator().remove();
@@ -46,8 +60,6 @@ public class IndexedMapEntriesTest {
 
   @Test
   public void keySetReturnsAllInMap() {
-    IndexedMap<Id, Animal> map = new IndexedHashMap<>();
-
     map.insert(fish.id, fish);
     map.insert(cat.id, cat);
     map.insert(dog.id, dog);
@@ -57,15 +69,11 @@ public class IndexedMapEntriesTest {
 
   @Test (expected = UnsupportedOperationException.class)
   public void keySetDoesNotAllowClear() {
-    IndexedMap<Id, Animal> map = new IndexedHashMap<>();
-
     map.keySet().clear();
   }
 
   @Test (expected = UnsupportedOperationException.class)
   public void keySetIteratorDoesNotAllowRemove() {
-    IndexedMap<Id, Animal> map = new IndexedHashMap<>();
-
     map.insert(fish.id, fish);
 
     map.keySet().iterator().remove();
@@ -73,8 +81,6 @@ public class IndexedMapEntriesTest {
 
   @Test
   public void valuesReturnsAllInMap() {
-    IndexedMap<Id, Animal> map = new IndexedHashMap<>();
-
     map.insert(fish.id, fish);
     map.insert(cat.id, cat);
     map.insert(dog.id, dog);
@@ -87,15 +93,11 @@ public class IndexedMapEntriesTest {
 
   @Test (expected = UnsupportedOperationException.class)
   public void valuesDoesNotAllowClear() {
-    IndexedMap<Id, Animal> map = new IndexedHashMap<>();
-
     map.values().clear();
   }
 
   @Test (expected = UnsupportedOperationException.class)
   public void valuesIteratorDoesNotAllowRemove() {
-    IndexedMap<Id, Animal> map = new IndexedHashMap<>();
-
     map.insert(fish.id, fish);
 
     map.values().iterator().remove();

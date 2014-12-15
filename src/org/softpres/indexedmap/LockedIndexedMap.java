@@ -1,9 +1,6 @@
 package org.softpres.indexedmap;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.function.BiFunction;
@@ -124,17 +121,20 @@ class LockedIndexedMap<K, V> implements IndexedMap<K, V> {
 
   @Override
   public Set<K> keySet() {
-    return withLock(readLock, map::keySet);
+    return Collections.unmodifiableSet(
+          withLock(readLock, () -> new HashSet<>(map.keySet())));
   }
 
   @Override
   public Collection<V> values() {
-    return withLock(readLock, map::values);
+    return Collections.unmodifiableCollection(
+          withLock(readLock, () -> new ArrayList<>(map.values())));
   }
 
   @Override
   public Set<Entry<K, V>> entrySet() {
-    return withLock(readLock, map::entrySet);
+    return Collections.unmodifiableSet(
+          withLock(readLock, () -> new HashSet<>(map.entrySet())));
   }
 
   private <T> T withLock(Lock lock, Supplier<T> work) {
@@ -143,16 +143,6 @@ class LockedIndexedMap<K, V> implements IndexedMap<K, V> {
       return work.get();
     } finally {
       lock.unlock();
-    }
-  }
-
-  @Override
-  public void withReadLock(Runnable runnable) {
-    readLock.lock();
-    try {
-      map.withReadLock(runnable);
-    } finally {
-      readLock.unlock();
     }
   }
 

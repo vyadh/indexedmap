@@ -2,10 +2,8 @@
 
 package org.softpres.indexedmap;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -22,6 +20,11 @@ import java.util.function.Function;
  * This class may or may not be thread safe depending on whether a locking
  * strategy is configured from the builder (is by default). However, this
  * support is a rudimentary read-uncommitted isolation capability.
+ * Views through the map, meaning {@link #entrySet()}, {@link #keySet()} and
+ * {@link #values()} are also thread-safe, but the price the price paid for
+ * that is that we make a copy under lock when a locking strategy is used
+ * {@link IndexedMapBuilder#lockStrategy(java.util.concurrent.locks.ReadWriteLock)}.
+ * To avoid the copying, using {@link Map#forEach(java.util.function.BiConsumer)}.
  * <p/>
  * This class should not be used with mutable objects. If required, some sort
  * of copy-on-write strategy should be used on top.
@@ -73,32 +76,5 @@ public interface IndexedMap<K, V> extends Map<K, V> {
    * secondary index key.
    */
   <I> Function<I, Map<K, V>> addIndex(BiFunction<K, V, Iterable<I>> view);
-
-  /**
-   * Execute the supplied runnable within the internal read lock. This is
-   * intended for use with
-   */
-  void withReadLock(Runnable runnable);
-
-  /**
-   * This method is not thread safe, and iteration must be done externally
-   * using the {@link #withReadLock(Runnable)} method.
-   */
-  @Override
-  Set<Entry<K, V>> entrySet();
-
-  /**
-   * This method is not thread safe, and iteration must be done externally
-   * using the {@link #withReadLock(Runnable)} method.
-   */
-  @Override
-  Set<K> keySet();
-
-  /**
-   * This method is not thread safe, and iteration must be done externally
-   * using the {@link #withReadLock(Runnable)} method.
-   */
-  @Override
-  Collection<V> values();
 
 }
