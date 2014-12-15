@@ -69,6 +69,21 @@ There is currently one implementation `IndexedHashMap`, where the primary
 index, and secondary indexes are backed by a normal `java.util.HashMap`
 instances.
 
+Concurrency
+-----------
+
+By default, locking of map operations is performed using a `ReadWriteLock`.
+If running operations a single thread, this can be turned off in the builder:
+
+```java
+IndexedMap<Integer, Animal> map = new IndexedMapBuilder<>()
+      .lockingStrategy(new NoReadWriteLock())
+      .build();
+```
+
+Currently, Java 8 default methods are not supported, which means that the
+operations are not updated as atomic operations.
+
 Transactions
 ------------
 
