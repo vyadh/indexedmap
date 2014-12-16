@@ -77,4 +77,6 @@ public interface IndexedMap<K, V> extends Map<K, V> {
    */
   <I> Function<I, Map<K, V>> addIndex(BiFunction<K, V, Iterable<I>> view);
 
+  // todo test default methods
+
 }

@@ -1,0 +1,98 @@
+package org.softpres.indexedmap;
+
+import org.junit.Test;
+
+import java.util.*;
+import java.util.function.Consumer;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+/**
+ * Concurrency tests for map operations.
+ */
+public class IndexedMapThreadTest {
+
+  private final int n = 15_000;
+
+  private final IndexedMap<String, Integer> map = new IndexedMapBuilder<String, Integer>().build();
+
+  @SuppressWarnings("Convert2MethodRef") // Symmetry
+  private final List<Consumer<String>> ops = Arrays.<Consumer<String>>asList(
+        key -> map.select(key),
+        key -> map.insert(key, map.getOrDefault(key, 0) + 1),
+        key -> map.delete(key + 10),
+        key -> map.computeIfPresent(key, (k, v) -> v + 11),
+        key -> map.put(key, map.containsKey(key) ? 1 : 2),
+        key -> map.put(key, map.containsValue(10) ? 3 : 4),
+        key -> map.computeIfPresent(key, (k, v) -> v + 22),
+        key -> map.computeIfPresent(key, (k, v) -> v + 33),
+        key -> map.getOrDefault(key, 0),
+        key -> map.forEach((k, v) -> { }),
+        key -> map.replaceAll((k, v) -> v),
+        key -> map.putIfAbsent(key + 1, 42),
+        key -> map.replace(key, 1, 2),
+        key -> map.replace(key, 42),
+        key -> map.computeIfAbsent(key + 2, k -> n),
+        key -> map.compute(key, (k, v) -> v == null ? 0 : v / 2),
+        key -> map.merge(key, 8, (ov, nv) -> ov + nv)
+  );
+
+  @Test
+  public void concurrency() throws InterruptedException {
+    Processor p1 = new Processor("one", 22);
+    Processor p2 = new Processor("two", 44);
+    Processor p3 = new Processor("three", 66);
+    Processor p4 = new Processor("four", 88);
+
+    p1.start();
+    p2.start();
+    p3.start();
+    p4.start();
+
+    p1.join();
+    p3.join();
+    p2.join();
+    p4.join();
+
+    assertThat(
+          map.entrySet().stream().mapToInt(Map.Entry::getValue).sum(),
+          is(450090267) // Result of running sequentially
+    );
+  }
+
+  class Processor extends Thread {
+    private final String name;
+    private final int seed;
+
+    Processor(String name, int seed) {
+      this.name = name;
+      this.seed = seed;
+    }
+
+    @Override
+    public void run() {
+      process(name, seed);
+    }
+  }
+
+  private void process(String key, int seed) {
+    populateMap(key);
+
+    Random rand = new Random(seed);
+
+    for (int i=0; i< n; i++) {
+      int opIndex = rand.nextInt(ops.size());
+      Consumer<String> op = ops.get(opIndex);
+      op.accept(key);
+    }
+  }
+
+  private void populateMap(String key) {
+    map.put(key, 0);
+    for (int i = 1; i <= n; i++) {
+      map.put(key + '_' + i, i);
+    }
+  }
+
+}
