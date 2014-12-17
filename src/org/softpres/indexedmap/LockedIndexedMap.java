@@ -137,6 +137,12 @@ class LockedIndexedMap<K, V> implements IndexedMap<K, V> {
           withLock(readLock, () -> new HashSet<>(map.entrySet())));
   }
 
+  @Override
+  public V getOrDefault(Object key, V defaultValue) {
+    return withLock(readLock, () ->
+          IndexedMap.super.getOrDefault(key, defaultValue));
+  }
+
   private <T> T withLock(Lock lock, Supplier<T> work) {
     lock.lock();
     try {
