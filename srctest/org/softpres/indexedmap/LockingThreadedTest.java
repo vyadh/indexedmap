@@ -1,3 +1,5 @@
+/* IndexedMap - (c) 2014, Kieron Wilkinson */
+
 package org.softpres.indexedmap;
 
 import org.junit.Test;
@@ -12,7 +14,7 @@ import static org.junit.Assert.assertThat;
 /**
  * Concurrency tests for map operations.
  */
-public class IndexedMapThreadTest {
+public class LockingThreadedTest {
 
   private final int n = 15_000;
 

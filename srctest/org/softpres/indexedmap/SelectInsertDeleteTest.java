@@ -15,7 +15,7 @@ import static org.softpres.indexedmap.animal.Animals.*;
 /**
  * Unit tests for basic operations on {@link IndexedHashMap}.
  */
-public class IndexedMapSelectInsertDeleteTest {
+public class SelectInsertDeleteTest {
 
   @Test
   public void selectingItemThatHasBeenPreviouslyInserted() {

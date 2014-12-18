@@ -20,11 +20,11 @@ import static org.softpres.indexedmap.animal.Animals.*;
  * Unit tests for basic operations on {@link IndexedHashMap}.
  */
 @RunWith(Parameterized.class)
-public class IndexedMapEntriesTest {
+public class ViewsTest {
 
   private final IndexedMap<Id, Animal> map;
 
-  public IndexedMapEntriesTest(IndexedMap<Id, Animal> map) {
+  public ViewsTest(IndexedMap<Id, Animal> map) {
     this.map = map;
   }
 

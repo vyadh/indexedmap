@@ -12,7 +12,7 @@ import static org.junit.Assert.assertThat;
  * still work, concurrency correctness testing is attempted in the class
  * {@link LockingThreadedTest}.
  */
-public class LockingDefaultMethodsTest {
+public class DefaultMethodsTest {
 
   private final IndexedMap<String, Integer> map =
         new IndexedMapBuilder<String, Integer>().build();

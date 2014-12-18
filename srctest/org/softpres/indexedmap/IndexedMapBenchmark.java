@@ -15,7 +15,7 @@ import static java.util.Collections.singleton;
  * Perform a similar set of random operations as ScalaSTM does,
  * but in a single thread.
  */
-public class IndexedMapBench {
+public class IndexedMapBenchmark {
 
   private static final ReadWriteLock lockStrategy = new ReentrantReadWriteLock();
 //  private static final ReadWriteLock lockStrategy = new NoReadWriteLock();
@@ -117,7 +117,7 @@ public class IndexedMapBench {
   }
 
   public static void main(String[] args) {
-    IndexedMapBench bench = new IndexedMapBench();
+    IndexedMapBenchmark bench = new IndexedMapBenchmark();
     bench.populate();
 
     for (int threads : threadBatches()) {

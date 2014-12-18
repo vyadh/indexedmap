@@ -18,7 +18,7 @@ import static org.junit.Assert.assertThat;
 /**
  * Unit tests for index methods on {@link IndexedHashMap}.
  */
-public class IndexedMapIndexingTest {
+public class IndexingTest {
 
   @Test
   public void indexByUnknownFoodReturnsNoAnimals() {

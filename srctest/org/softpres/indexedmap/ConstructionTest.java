@@ -16,7 +16,7 @@ import static org.softpres.indexedmap.animal.Animals.*;
 /**
  * Unit tests for basic operations on {@link IndexedHashMap}.
  */
-public class IndexedMapConstructionTest {
+public class ConstructionTest {
 
   @Test
   public void initialValuesAreAccessibleFromPrimary() {
