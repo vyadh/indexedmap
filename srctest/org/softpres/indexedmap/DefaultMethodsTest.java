@@ -4,6 +4,11 @@ package org.softpres.indexedmap;
 
 import org.junit.Test;
 
+import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -25,7 +30,22 @@ public class DefaultMethodsTest {
     assertThat(map.getOrDefault("one", 0), is(1));
   }
 
-  // todo test forEach
+  @Test
+  public void forEachUsesMapsDefaultMethod() {
+    map.put("one", 1);
+    map.put("two", 2);
+    map.put("three", 3);
+
+    Set<SimpleImmutableEntry<String, Integer>> entries = new HashSet<>();
+    map.forEach((k, v) -> entries.add(new SimpleImmutableEntry<>(k, v)));
+
+    assertThat(entries, is(new HashSet<>(Arrays.asList(
+          new SimpleImmutableEntry<>("one", 1),
+          new SimpleImmutableEntry<>("two", 2),
+          new SimpleImmutableEntry<>("three", 3)
+    ))));
+  }
+
   // todo test replaceAll
   // todo test putIfAbsent
   // todo test remove

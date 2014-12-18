@@ -3,6 +3,7 @@ package org.softpres.indexedmap;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -141,6 +142,14 @@ class LockedIndexedMap<K, V> implements IndexedMap<K, V> {
   public V getOrDefault(Object key, V defaultValue) {
     return withLock(readLock, () ->
           IndexedMap.super.getOrDefault(key, defaultValue));
+  }
+
+  @Override
+  public void forEach(BiConsumer<? super K, ? super V> action) {
+    withLock(readLock, () -> {
+      IndexedMap.super.forEach(action);
+      return null;
+    });
   }
 
   private <T> T withLock(Lock lock, Supplier<T> work) {
