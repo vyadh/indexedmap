@@ -147,7 +147,23 @@ class LockedIndexedMap<K, V> implements IndexedMap<K, V> {
   @Override
   public void forEach(BiConsumer<? super K, ? super V> action) {
     withLock(readLock, () -> {
-      IndexedMap.super.forEach(action);
+      map.forEach(action);
+      return null;
+    });
+  }
+
+  @Override
+  public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
+    withLock(writeLock, () -> {
+      // Not exactly optimal, but good enough for now
+      Set<Entry<K, V>> entries = new HashSet<>(map.entrySet());
+      for (Entry<K, V> entry : entries) {
+        K key = entry.getKey();
+        V value = entry.getValue();
+        V newValue = function.apply(key, value);
+        map.remove(key);
+        map.put(key, newValue);
+      }
       return null;
     });
   }
