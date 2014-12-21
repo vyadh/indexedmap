@@ -138,10 +138,36 @@ class LockedIndexedMap<K, V> implements IndexedMap<K, V> {
           withLock(readLock, () -> new HashSet<>(map.entrySet())));
   }
 
+  private <T> T withLock(Lock lock, Supplier<T> work) {
+    lock.lock();
+    try {
+      return work.get();
+    } finally {
+      lock.unlock();
+    }
+  }
+
+
+  // Default methods
+
+  @Override
+  public V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+    return withLock(writeLock, () -> map.compute(key, remappingFunction));
+  }
+
+  @Override
+  public V computeIfAbsent(K key, Function<? super K, ? extends V> remappingFunction) {
+    return withLock(writeLock, () -> map.computeIfAbsent(key, remappingFunction));
+  }
+
+  @Override
+  public V computeIfPresent(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+    return withLock(writeLock, () -> map.computeIfPresent(key, remappingFunction));
+  }
+
   @Override
   public V getOrDefault(Object key, V defaultValue) {
-    return withLock(readLock, () ->
-          IndexedMap.super.getOrDefault(key, defaultValue));
+    return withLock(readLock, () -> map.getOrDefault(key, defaultValue));
   }
 
   @Override
@@ -153,28 +179,51 @@ class LockedIndexedMap<K, V> implements IndexedMap<K, V> {
   }
 
   @Override
-  public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
-    withLock(writeLock, () -> {
-      // Not exactly optimal, but good enough for now
-      Set<Entry<K, V>> entries = new HashSet<>(map.entrySet());
-      for (Entry<K, V> entry : entries) {
-        K key = entry.getKey();
-        V value = entry.getValue();
-        V newValue = function.apply(key, value);
-        map.remove(key);
-        map.put(key, newValue);
-      }
-      return null;
-    });
+  public V merge(K key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+    return withLock(writeLock, () -> map.merge(key, value, remappingFunction));
   }
 
-  private <T> T withLock(Lock lock, Supplier<T> work) {
-    lock.lock();
+  @Override
+  public V putIfAbsent(K key, V value) {
+    return withLock(writeLock, () -> map.putIfAbsent(key, value));
+  }
+
+  @Override
+  public boolean remove(Object key, Object value) {
+    writeLock.lock();
     try {
-      return work.get();
+      return map.remove(key, value);
     } finally {
-      lock.unlock();
+      writeLock.unlock();
     }
+  }
+
+  @Override
+  public boolean replace(K key, V oldValue, V newValue) {
+    writeLock.lock();
+    try {
+      return map.replace(key, oldValue, newValue);
+    } finally {
+      writeLock.unlock();
+    }
+  }
+
+  @Override
+  public V replace(K key, V value) {
+    writeLock.lock();
+    try {
+      return map.replace(key, value);
+    } finally {
+      writeLock.unlock();
+    }
+  }
+
+  @Override
+  public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
+    withLock(writeLock, () -> {
+      map.replaceAll(function);
+      return null;
+    });
   }
 
 }

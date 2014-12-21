@@ -22,7 +22,7 @@ public class DefaultMethodsTest {
         new IndexedMapBuilder<String, Integer>().build();
 
   @Test
-  public void getOrDefaultUsesMapsDefaultMethod() {
+  public void getOrDefaultSimpleTest() {
     map.put("one", 1);
 
     assertThat(map.getOrDefault("zero", 0), is(0));
@@ -30,7 +30,7 @@ public class DefaultMethodsTest {
   }
 
   @Test
-  public void forEachUsesMapsDefaultMethod() {
+  public void forEachSimpleTest() {
     map.put("one", 1);
     map.put("two", 2);
     map.put("three", 3);
@@ -46,7 +46,7 @@ public class DefaultMethodsTest {
   }
 
   @Test
-  public void replaceAllUsesMapsDefaultMethod() {
+  public void replaceAllUpdatesValues() {
     map.put("one", 1);
     map.put("two", 2);
     map.put("three", 3);

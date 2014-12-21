@@ -3,11 +3,15 @@
 package org.softpres.indexedmap;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
  * An {@link IndexedMap} backed by {@link HashMap} instances.
+ * <p/>
+ * Default methods are delegated to the primary map in all cases, as it likely
+ * has a more efficient implementation than the default.
  */
 public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
 
@@ -193,6 +197,82 @@ public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
     primary.clear();
     for (Index<?> index : indices) {
       index.mapping.clear();
+    }
+  }
+
+
+  // Default methods, implemented to use likely more efficient map implementation
+  // todo Some of these mutate, which will invalidate our indexes
+  // todo For now, these methods are marked as todo
+
+  //todo
+//  @Override
+//  public V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+//    return primary.compute(key, remappingFunction);
+//  }
+
+  //todo
+//  @Override
+//  public V computeIfAbsent(K key, Function<? super K, ? extends V> remappingFunction) {
+//    return primary.computeIfAbsent(key, remappingFunction);
+//  }
+
+  //todo
+//  @Override
+//  public V computeIfPresent(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+//    return primary.computeIfPresent(key, remappingFunction);
+//  }
+
+  @Override
+  public V getOrDefault(Object key, V defaultValue) {
+    return primary.getOrDefault(key, defaultValue);
+  }
+
+  @Override
+  public void forEach(BiConsumer<? super K, ? super V> action) {
+    primary.forEach(action);
+  }
+
+  //todo
+//  @Override
+//  public V merge(K key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+//    return primary.merge(key, value, remappingFunction);
+//  }
+
+  //todo
+//  @Override
+//  public V putIfAbsent(K key, V value) {
+//    return primary.putIfAbsent(key, value);
+//  }
+
+  //todo
+//  @Override
+//  public boolean remove(Object key, Object value) {
+//    return primary.remove(key, value);
+//  }
+
+  //todo
+//  @Override
+//  public boolean replace(K key, V oldValue, V newValue) {
+//    return primary.replace(key, oldValue, newValue);
+//  }
+
+  //todo
+//  @Override
+//  public V replace(K key, V value) {
+//    return primary.replace(key, value);
+//  }
+
+  @Override
+  public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
+    // Not exactly optimal, but good enough for now
+    Set<Entry<K, V>> entries = new HashSet<>(entrySet());
+    for (Entry<K, V> entry : entries) {
+      K key = entry.getKey();
+      V value = entry.getValue();
+      V newValue = function.apply(key, value);
+      remove(key);
+      put(key, newValue);
     }
   }
 

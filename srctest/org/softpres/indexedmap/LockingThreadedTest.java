@@ -34,7 +34,7 @@ public class LockingThreadedTest {
         key -> map.computeIfPresent(key, (k, v) -> v + 33),
         key -> map.getOrDefault(key, 0),
         key -> map.forEach((k, v) -> { }),
-        key -> map.replaceAll((k, v) -> v),
+        key -> map.replaceAll((k, v) -> v), //todo modify
         key -> map.putIfAbsent(key + 1, 42),
         key -> map.replace(key, 1, 2),
         key -> map.replace(key, 42),
@@ -50,15 +50,28 @@ public class LockingThreadedTest {
     Processor p3 = new Processor("three", 66);
     Processor p4 = new Processor("four", 88);
 
-    p1.start();
-    p1.join();
-    p2.start();
-    p2.join();
-    p3.start();
-    p3.join();
-    p4.start();
+    // Note that when in parallel, it works slower because of lock contention
+    boolean parallel = true;
 
-    p4.join();
+    if (parallel) {
+      p1.start();
+      p2.start();
+      p3.start();
+      p4.start();
+      p1.join();
+      p2.join();
+      p3.join();
+      p4.join();
+    } else {
+      p1.start();
+      p1.join();
+      p2.start();
+      p2.join();
+      p3.start();
+      p3.join();
+      p4.start();
+      p4.join();
+    }
 
     assertThat(
           sum(map),

@@ -5,11 +5,13 @@ An in-memory map that works a little like a database table with indices. A
 secondary index can be added on demand to provide fast lookups by providing
 the indexing strategy via a simple Java 8 lambda expression.
 
-This is inspired by [ScalaSTM][1]'s `IndexedMap`, but most suitable for
-single-threaded usage. It could also serve as a migration path towards
-ScalaSTM if multi-thread usage is later required (ScalaSTM provides an
-alternative Java-friendly API). IndexedMap can be used in a multi-threaded
-context, but this looses any serializable transaction isolation capability.
+This is inspired by [ScalaSTM][1]'s `IndexedMap`, but most suitable for single
+single-threaded usage. It could also serve as a migration path towards ScalaSTM
+if multi-thread usage is later required (ScalaSTM provides an alternative
+Java-friendly API). It is possible to use IndexedMap in a multi-threaded context,
+but this does not have any built-in transaction isolation capability, and is also
+not very efficient given a `ReadWriteLock` is used across the whole map to ensure
+the indexes are always maintained.
 
 The intended use-case is to manage state for applications that have a fast,
 single threaded event processor for queries and updates. Practically this will
