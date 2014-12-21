@@ -1,3 +1,5 @@
+/* IndexedMap - (c) 2014, Kieron Wilkinson */
+
 package org.softpres.indexedmap;
 
 import java.util.*;

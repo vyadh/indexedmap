@@ -11,6 +11,7 @@ import org.softpres.indexedmap.animal.Id;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -56,6 +57,14 @@ public class ViewsTest {
     map.insert(fish.id, fish);
 
     map.entrySet().iterator().remove();
+  }
+
+  @Test (expected = UnsupportedOperationException.class)
+  public void entrySetEntriesDoNotAllowModification() {
+    map.insert(fish.id, fish);
+
+    Map.Entry<Id, Animal> entry = map.entrySet().iterator().next();
+    entry.setValue(dog);
   }
 
   @Test
