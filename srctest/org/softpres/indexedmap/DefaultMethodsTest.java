@@ -67,7 +67,7 @@ public class DefaultMethodsTest {
     map.put("three", 3);
     map.put("four", 4);
     Function<Boolean, Map<String, Integer>> evenOrOdd =
-          map.addIndex((k, v) -> Collections.singleton(v % 2 == 0));
+          map.addIndex((k1, v1) -> Collections.singleton(v1 % 2 == 0));
 
     map.replaceAll((k, v) -> v + 1);
 
@@ -78,6 +78,41 @@ public class DefaultMethodsTest {
     assertThat(odds, is(set(3, 5)));
   }
 
+  @Test
+  public void removeUpdatesValues() {
+    map.put("one", 1);
+    map.put("two", 2);
+    map.put("three", 3);
+    Function<Boolean, Map<String, Integer>> evenOrOdd =
+          map.addIndex((k1, v1) -> Collections.singleton(v1 % 2 == 0));
+
+    map.remove("one", 1);
+
+    assertThat(values(evenOrOdd.apply(true)), is(set(2)));
+    assertThat(values(evenOrOdd.apply(false)), is(set(3)));
+  }
+
+  @Test
+  public void removeUpdatesIndexes() {
+    map.put("one", 1);
+    map.put("two", 2);
+    map.put("three", 3);
+
+    map.remove("one", 2);
+    assertThat(map.get("one"), is(1));
+
+    map.remove("one", 1);
+    assertThat(map.containsKey("one"), is(false));
+  }
+
+  // todo test compute
+  // todo test computeIfAbsent
+  // todo test computeIfPresent
+  // todo test putIfAbsent
+  // todo test remove
+  // todo test replace * 2
+  // todo test merge
+
   private Set<Integer> values(Map<String, Integer> entries) {
     return new HashSet<>(entries.values());
   }
@@ -85,13 +120,5 @@ public class DefaultMethodsTest {
   private Set<Integer> set(Integer... items) {
     return new HashSet<>(Arrays.asList(items));
   }
-
-  // todo test putIfAbsent
-  // todo test remove
-  // todo test replace * 2
-  // todo test computeIfAbsent
-  // todo test computeIfPresent
-  // todo test compute
-  // todo test merge
 
 }

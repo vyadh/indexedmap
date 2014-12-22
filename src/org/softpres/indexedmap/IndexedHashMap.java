@@ -245,11 +245,10 @@ public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
 //    return primary.putIfAbsent(key, value);
 //  }
 
-  //todo
-//  @Override
-//  public boolean remove(Object key, Object value) {
-//    return primary.remove(key, value);
-//  }
+  @Override
+  public boolean remove(Object key, Object value) {
+    return IndexedMap.super.remove(key, value);
+  }
 
   //todo
 //  @Override
