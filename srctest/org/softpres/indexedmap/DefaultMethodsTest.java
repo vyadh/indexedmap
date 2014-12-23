@@ -83,6 +83,19 @@ public class DefaultMethodsTest {
     map.put("one", 1);
     map.put("two", 2);
     map.put("three", 3);
+
+    map.remove("one", 2);
+    assertThat(map.get("one"), is(1));
+
+    map.remove("one", 1);
+    assertThat(map.containsKey("one"), is(false));
+  }
+
+  @Test
+  public void removeUpdatesIndexes() {
+    map.put("one", 1);
+    map.put("two", 2);
+    map.put("three", 3);
     Function<Boolean, Map<String, Integer>> evenOrOdd =
           map.addIndex((k1, v1) -> Collections.singleton(v1 % 2 == 0));
 
@@ -93,24 +106,56 @@ public class DefaultMethodsTest {
   }
 
   @Test
-  public void removeUpdatesIndexes() {
+  public void replaceUpdatesValues() {
+    map.put("one", 1);
+
+    map.replace("one", 100);
+    assertThat(map.get("one"), is(100));
+  }
+
+  @Test
+  public void replaceUpdatesIndexes() {
     map.put("one", 1);
     map.put("two", 2);
     map.put("three", 3);
+    Function<Boolean, Map<String, Integer>> evenOrOdd =
+          map.addIndex((k1, v1) -> Collections.singleton(v1 % 2 == 0));
 
-    map.remove("one", 2);
+    map.replace("one", 100);
+
+    assertThat(values(evenOrOdd.apply(true)), is(set(2, 100)));
+    assertThat(values(evenOrOdd.apply(false)), is(set(3)));
+  }
+
+  @Test
+  public void replaceFromOldUpdatesValues() {
+    map.put("one", 1);
+
+    map.replace("one", 2, 100);
     assertThat(map.get("one"), is(1));
 
-    map.remove("one", 1);
-    assertThat(map.containsKey("one"), is(false));
+    map.replace("one", 1, 100);
+    assertThat(map.get("one"), is(100));
+  }
+
+  @Test
+  public void replaceFromOldUpdatesIndexes() {
+    map.put("one", 1);
+    map.put("two", 2);
+    map.put("three", 3);
+    Function<Boolean, Map<String, Integer>> evenOrOdd =
+          map.addIndex((k1, v1) -> Collections.singleton(v1 % 2 == 0));
+
+    map.replace("one", 1, 100);
+
+    assertThat(values(evenOrOdd.apply(true)), is(set(2, 100)));
+    assertThat(values(evenOrOdd.apply(false)), is(set(3)));
   }
 
   // todo test compute
   // todo test computeIfAbsent
   // todo test computeIfPresent
   // todo test putIfAbsent
-  // todo test remove
-  // todo test replace * 2
   // todo test merge
 
   private Set<Integer> values(Map<String, Integer> entries) {

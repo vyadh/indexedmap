@@ -9,9 +9,6 @@ import java.util.function.Function;
 
 /**
  * An {@link IndexedMap} backed by {@link HashMap} instances.
- * <p/>
- * Default methods are delegated to the primary map in all cases, as it likely
- * has a more efficient implementation than the default.
  */
 public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
 
@@ -201,9 +198,10 @@ public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
   }
 
 
-  // Default methods, implemented to use likely more efficient map implementation
-  // todo Some of these mutate, which will invalidate our indexes
-  // todo For now, these methods are marked as todo
+  // Default methods are delegated to the default implementations in {@link Map}
+  // in some cases, which is likely not as efficient as the {@link HashMap}
+  // versions, but ensure indexes are updated. Improvement can be done on an
+  // as-needed basis.
 
   //todo
 //  @Override
@@ -250,17 +248,15 @@ public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
     return IndexedMap.super.remove(key, value);
   }
 
-  //todo
-//  @Override
-//  public boolean replace(K key, V oldValue, V newValue) {
-//    return primary.replace(key, oldValue, newValue);
-//  }
+  @Override
+  public V replace(K key, V value) {
+    return IndexedMap.super.replace(key, value);
+  }
 
-  //todo
-//  @Override
-//  public V replace(K key, V value) {
-//    return primary.replace(key, value);
-//  }
+  @Override
+  public boolean replace(K key, V oldValue, V newValue) {
+    return IndexedMap.super.replace(key, oldValue, newValue);
+  }
 
   @Override
   public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
