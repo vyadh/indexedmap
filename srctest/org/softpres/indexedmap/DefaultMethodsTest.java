@@ -46,6 +46,34 @@ public class DefaultMethodsTest {
   }
 
   @Test
+  public void putIfAbsentUpdatesValues() {
+    map.put("key", 1);
+
+    map.putIfAbsent("key", 2);
+    assertThat(map.get("key"), is(1));
+
+    map.putIfAbsent("key2", 2);
+    assertThat(map.get("key2"), is(2));
+  }
+
+  @Test
+  public void putIfAbsentUpdatesIndexes() {
+    map.put("one", 1);
+    map.put("two", 2);
+    map.put("three", 3);
+    Function<Boolean, Map<String, Integer>> evenOrOdd =
+          map.addIndex((k1, v1) -> Collections.singleton(v1 % 2 == 0));
+
+    map.putIfAbsent("four", 4);
+
+    Set<Integer> evens = values(evenOrOdd.apply(true));
+    Set<Integer> odds = values(evenOrOdd.apply(false));
+
+    assertThat(evens, is(set(2, 4)));
+    assertThat(odds, is(set(1, 3)));
+  }
+
+  @Test
   public void replaceAllUpdatesValues() {
     map.put("one", 1);
     map.put("two", 2);

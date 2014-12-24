@@ -83,8 +83,7 @@ IndexedMap<Integer, Animal> map = new IndexedMapBuilder<>()
       .build();
 ```
 
-Currently, Java 8 default methods are not supported, which means that the
-operations are not updated as atomic operations.
+Java 8 default methods for `Map` are also supported.
 
 Transactions
 ------------
