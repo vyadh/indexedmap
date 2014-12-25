@@ -11,11 +11,11 @@ import java.util.Set;
  * We don't want mutable entries mucking up the index, so for now, do not
  * allow them to be changed.
  */
-public class UnmodifiableEntrySet<K, V> extends AbstractSet<Entry<K, V>> {
+class UnmodifiableEntrySet<K, V> extends AbstractSet<Entry<K, V>> {
 
   private final Set<Entry<K, V>> entries;
 
-  public UnmodifiableEntrySet(Set<Entry<K, V>> entries) {
+  UnmodifiableEntrySet(Set<Entry<K, V>> entries) {
     this.entries = entries;
   }
 
