@@ -93,7 +93,7 @@ reads and writes of values. This works by checking writes for values are for
 the same 'revision' as the ones read. If the change is permitted, the revision
 is incremented and placed back into the map.
 
-This feature is current a work in progress.
+This feature is currently a work in progress.
 
 Transactions
 ------------

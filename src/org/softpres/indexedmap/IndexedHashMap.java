@@ -3,14 +3,12 @@
 package org.softpres.indexedmap;
 
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Function;
+import java.util.function.*;
 
 /**
  * An {@link IndexedMap} backed by {@link HashMap} instances.
  */
-public class IndexedHashMap<K, V> implements IndexedMap<K,V> {
+public class IndexedHashMap<K, V> implements IndexedMap<K, V> {
 
   private final Map<K, V> primary;
   private final List<Index<?>> indices = new LinkedList<>();
