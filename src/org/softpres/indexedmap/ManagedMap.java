@@ -50,6 +50,9 @@ public class ManagedMap<K, V> implements Map<K, V> {
 
   @Override
   public void clear() {
+    for (V v : map.values()) {
+      onDelete.accept(v);
+    }
     map.clear();
   }
 
@@ -68,20 +71,25 @@ public class ManagedMap<K, V> implements Map<K, V> {
 
   @Override
   public V remove(Object key) {
-    return map.remove(key);
+    V removed = map.remove(key);
+    if (removed != null) {
+      onDelete.accept(removed);
+    }
+    return removed;
   }
 
   @Override
   public void putAll(Map<? extends K, ? extends V> m) {
+    m.forEach(this::put);
     map.putAll(m);
   }
 
   // Default methods that need managing
 
-  @Override
-  public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
-    map.replaceAll(function);
-  }
+//  @Override
+//  public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
+//    map.replaceAll(function);
+//  }
 
   // Default methods dispatched for efficiency
 
