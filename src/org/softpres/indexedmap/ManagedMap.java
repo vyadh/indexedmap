@@ -50,9 +50,7 @@ public class ManagedMap<K, V> implements Map<K, V> {
 
   @Override
   public void clear() {
-    for (V v : map.values()) {
-      onDelete.accept(v);
-    }
+    map.values().forEach(onDelete::accept);
     map.clear();
   }
 

@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Unit tests for {@link ManagedMap}.
  */
-public class ManagedWriteTest {
+public class ManagedMapTest {
 
   private final CaptureAdd onNew = new CaptureAdd();
   private final CaptureChange onChange = new CaptureChange();
@@ -47,6 +47,31 @@ public class ManagedWriteTest {
 
     assertThat(onChange.current).isEqualTo(1);
     assertThat(onChange.replacement).isEqualTo(2);
+  }
+
+  @Test
+  public void putWithOnNewReplacementAffectsMap() {
+    Function<Integer, Integer> add = i -> i + 1;
+
+    Map<String, Integer> m = new ManagedMap<>(
+          new HashMap<>(), add, onChange, onDelete);
+
+    m.put("key", 10);
+
+    assertThat(m.get("key")).isEqualTo(11);
+  }
+
+  @Test
+  public void putWithOnChangedReplacementAffectsMap() {
+    BiFunction<Integer, Integer, Integer> add = (c, r) -> c + r;
+
+    Map<String, Integer> m = new ManagedMap<>(
+          new HashMap<>(), onNew, add, onDelete);
+
+    m.put("key", 5);
+    m.put("key", 10);
+
+    assertThat(m.get("key")).isEqualTo(15);
   }
 
   @Test
