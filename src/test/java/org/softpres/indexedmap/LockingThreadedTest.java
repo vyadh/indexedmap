@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class LockingThreadedTest {
 
-  private final int n = 15_000;
+  private final int n = 5_000;
 
   private final IndexedMap<String, Integer> map = new IndexedMapBuilder<String, Integer>().build();
   private final Function<Boolean, Map<String, Integer>> byEven = map.addIndex(this::even);
@@ -72,12 +72,12 @@ public class LockingThreadedTest {
       p4.join();
     }
 
-    assertThat(sum(map)).isEqualTo(450090267);
+    assertThat(sum(map)).isEqualTo(50030275);
 
-    assertThat(sum(byEven.apply(Boolean.TRUE))).isEqualTo(225090210);
-    assertThat(sum(byOdd.apply(Boolean.FALSE))).isEqualTo(225090210);
-    assertThat(sum(byOdd.apply(Boolean.TRUE))).isEqualTo(225000057);
-    assertThat(sum(byEven.apply(Boolean.FALSE))).isEqualTo(225000057);
+    assertThat(sum(byEven.apply(Boolean.TRUE))) .isEqualTo(25030222);
+    assertThat(sum(byOdd.apply (Boolean.FALSE))).isEqualTo(25030222);
+    assertThat(sum(byOdd.apply (Boolean.TRUE))) .isEqualTo(25000053);
+    assertThat(sum(byEven.apply(Boolean.FALSE))).isEqualTo(25000053);
   }
 
   private int sum(Map<String, Integer> m) {

@@ -1,0 +1,20 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+version = '0.9'
+jar {
+  manifest {
+    attributes 'Implementation-Title': 'Indexed Map', 'Implementation-Version': version
+  }
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  testCompile group: 'junit', name: 'junit', version: '4.+'
+  testCompile group: 'org.assertj', name: 'assertj-core', version: '1.7.+'
+}
+
+defaultTasks 'clean', 'test', 'jar'
