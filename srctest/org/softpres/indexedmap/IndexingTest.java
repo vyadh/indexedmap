@@ -11,9 +11,7 @@ import java.util.function.Function;
 
 import static org.softpres.indexedmap.animal.Animals.*;
 import static java.util.Collections.singleton;
-import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Unit tests for index methods on {@link IndexedHashMap}.
@@ -27,7 +25,7 @@ public class IndexingTest {
     Function<String, Map<Id, Animal>> index =
           map.addIndex((id, a) -> a.foods);
 
-    assertThat(index.apply("sausage"), equalTo(map()));
+    assertThat(index.apply("sausage")).isEqualTo(map());
   }
 
   @Test
@@ -37,13 +35,13 @@ public class IndexingTest {
     Function<String, Map<Id, Animal>> index =
           map.addIndex((id, a) -> a.foods);
 
-    assertThat(index.apply("biscuits"), equalTo(map(cat, dog)));
-    assertThat(index.apply("fish"), equalTo(map(cat)));
-    assertThat(index.apply("mouse"), equalTo(map(cat)));
-    assertThat(index.apply("rabbit"), equalTo(map(dog)));
-    assertThat(index.apply("grass"), equalTo(map(cow, sheep)));
-    assertThat(index.apply("worm"), equalTo(map(bird)));
-    assertThat(index.apply("water"), equalTo(map(cat, dog, cow, sheep, bird)));
+    assertThat(index.apply("biscuits")).isEqualTo(map(cat, dog));
+    assertThat(index.apply("fish")).isEqualTo(map(cat));
+    assertThat(index.apply("mouse")).isEqualTo(map(cat));
+    assertThat(index.apply("rabbit")).isEqualTo(map(dog));
+    assertThat(index.apply("grass")).isEqualTo(map(cow, sheep));
+    assertThat(index.apply("worm")).isEqualTo(map(bird));
+    assertThat(index.apply("water")).isEqualTo(map(cat, dog, cow, sheep, bird));
   }
 
   @Test
@@ -53,9 +51,9 @@ public class IndexingTest {
     Function<Integer, Map<Id, Animal>> index =
           map.addIndex((id, a) -> singleton(a.legs));
 
-    assertThat(index.apply(0), equalTo(map()));
-    assertThat(index.apply(2), equalTo(map(bird)));
-    assertThat(index.apply(4), equalTo(map(cat, dog, cow, sheep)));
+    assertThat(index.apply(0)).isEqualTo(map());
+    assertThat(index.apply(2)).isEqualTo(map(bird));
+    assertThat(index.apply(4)).isEqualTo(map(cat, dog, cow, sheep));
   }
 
   @Test
@@ -68,7 +66,7 @@ public class IndexingTest {
     map.delete(dog.id);
     map.delete(cat.id);
 
-    assertThat(index.apply(4), sameInstance(Collections.<Id, Animal>emptyMap()));
+    assertThat(index.apply(4)).isSameAs(Collections.<Id, Animal>emptyMap());
   }
 
   @Test
@@ -79,7 +77,7 @@ public class IndexingTest {
     map.delete(cat.id);
     map.delete(dog.id);
 
-    assertThat(index.apply("biscuits"), equalTo(map()));
+    assertThat(index.apply("biscuits")).isEqualTo(map());
   }
 
   @Test
@@ -89,8 +87,8 @@ public class IndexingTest {
 
     map.insert(dog.id, woundedDog);
 
-    assertThat(index.apply("biscuits"), equalTo(map(cat)));
-    assertThat(index.apply("medicine"), equalTo(map(woundedDog)));
+    assertThat(index.apply("biscuits")).isEqualTo(map(cat));
+    assertThat(index.apply("medicine")).isEqualTo(map(woundedDog));
   }
 
   @Test
@@ -101,8 +99,8 @@ public class IndexingTest {
           map.addIndex((id, a) -> singleton(a.legs));
 
     assertThat(
-          new ArrayList<>(index.apply(4).values()),
-          equalTo(Arrays.asList(dog, cat, cow, sheep)));
+          new ArrayList<>(index.apply(4).values())).isEqualTo(
+          Arrays.asList(dog, cat, cow, sheep));
   }
 
 

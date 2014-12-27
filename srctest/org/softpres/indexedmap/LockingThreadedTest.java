@@ -8,8 +8,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Concurrency tests for map operations.
@@ -73,15 +72,12 @@ public class LockingThreadedTest {
       p4.join();
     }
 
-    assertThat(
-          sum(map),
-          is(450090267)
-    );
+    assertThat(sum(map)).isEqualTo(450090267);
 
-    assertThat(sum(byEven.apply(Boolean.TRUE)), is(225090210));
-    assertThat(sum(byOdd.apply(Boolean.FALSE)), is(225090210));
-    assertThat(sum(byOdd.apply(Boolean.TRUE)),   is(225000057));
-    assertThat(sum(byEven.apply(Boolean.FALSE)), is(225000057));
+    assertThat(sum(byEven.apply(Boolean.TRUE))).isEqualTo(225090210);
+    assertThat(sum(byOdd.apply(Boolean.FALSE))).isEqualTo(225090210);
+    assertThat(sum(byOdd.apply(Boolean.TRUE))).isEqualTo(225000057);
+    assertThat(sum(byEven.apply(Boolean.FALSE))).isEqualTo(225000057);
   }
 
   private int sum(Map<String, Integer> m) {

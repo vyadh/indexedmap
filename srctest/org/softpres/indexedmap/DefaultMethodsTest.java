@@ -8,8 +8,7 @@ import java.util.*;
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.function.Function;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Simple tests for Map's default methods. These simply verify the methods
@@ -25,8 +24,8 @@ public class DefaultMethodsTest {
   public void getOrDefaultSimpleTest() {
     map.put("one", 1);
 
-    assertThat(map.getOrDefault("zero", 0), is(0));
-    assertThat(map.getOrDefault("one", 0), is(1));
+    assertThat(map.getOrDefault("zero", 0)).isEqualTo(0);
+    assertThat(map.getOrDefault("one", 0)).isEqualTo(1);
   }
 
   @Test
@@ -38,11 +37,11 @@ public class DefaultMethodsTest {
     Set<SimpleImmutableEntry<String, Integer>> entries = new HashSet<>();
     map.forEach((k, v) -> entries.add(new SimpleImmutableEntry<>(k, v)));
 
-    assertThat(entries, is(new HashSet<>(Arrays.asList(
+    assertThat(entries).isEqualTo(new HashSet<>(Arrays.asList(
           new SimpleImmutableEntry<>("one", 1),
           new SimpleImmutableEntry<>("two", 2),
           new SimpleImmutableEntry<>("three", 3)
-    ))));
+    )));
   }
 
   @Test
@@ -50,10 +49,10 @@ public class DefaultMethodsTest {
     map.put("key", 1);
 
     map.putIfAbsent("key", 2);
-    assertThat(map.get("key"), is(1));
+    assertThat(map.get("key")).isEqualTo(1);
 
     map.putIfAbsent("key2", 2);
-    assertThat(map.get("key2"), is(2));
+    assertThat(map.get("key2")).isEqualTo(2);
   }
 
   @Test
@@ -69,8 +68,8 @@ public class DefaultMethodsTest {
     Set<Integer> evens = values(evenOrOdd.apply(true));
     Set<Integer> odds = values(evenOrOdd.apply(false));
 
-    assertThat(evens, is(set(2, 4)));
-    assertThat(odds, is(set(1, 3)));
+    assertThat(evens).isEqualTo(set(2, 4));
+    assertThat(odds).isEqualTo(set(1, 3));
   }
 
   @Test
@@ -81,11 +80,11 @@ public class DefaultMethodsTest {
 
     map.replaceAll((k, v) -> v + 1);
 
-    assertThat(map.entrySet(), is(new HashSet<>(Arrays.asList(
+    assertThat(map.entrySet()).isEqualTo(new HashSet<>(Arrays.asList(
           new SimpleImmutableEntry<>("one", 2),
           new SimpleImmutableEntry<>("two", 3),
           new SimpleImmutableEntry<>("three", 4)
-    ))));
+    )));
   }
 
   @Test
@@ -102,8 +101,8 @@ public class DefaultMethodsTest {
     Set<Integer> evens = values(evenOrOdd.apply(true));
     Set<Integer> odds = values(evenOrOdd.apply(false));
 
-    assertThat(evens, is(set(2, 4)));
-    assertThat(odds, is(set(3, 5)));
+    assertThat(evens).isEqualTo(set(2, 4));
+    assertThat(odds).isEqualTo(set(3, 5));
   }
 
   @Test
@@ -113,10 +112,10 @@ public class DefaultMethodsTest {
     map.put("three", 3);
 
     map.remove("one", 2);
-    assertThat(map.get("one"), is(1));
+    assertThat(map.get("one")).isEqualTo(1);
 
     map.remove("one", 1);
-    assertThat(map.containsKey("one"), is(false));
+    assertThat(map.containsKey("one")).isEqualTo(false);
   }
 
   @Test
@@ -129,8 +128,8 @@ public class DefaultMethodsTest {
 
     map.remove("one", 1);
 
-    assertThat(values(evenOrOdd.apply(true)), is(set(2)));
-    assertThat(values(evenOrOdd.apply(false)), is(set(3)));
+    assertThat(values(evenOrOdd.apply(true))).isEqualTo(set(2));
+    assertThat(values(evenOrOdd.apply(false))).isEqualTo(set(3));
   }
 
   @Test
@@ -138,7 +137,7 @@ public class DefaultMethodsTest {
     map.put("one", 1);
 
     map.replace("one", 100);
-    assertThat(map.get("one"), is(100));
+    assertThat(map.get("one")).isEqualTo(100);
   }
 
   @Test
@@ -151,8 +150,8 @@ public class DefaultMethodsTest {
 
     map.replace("one", 100);
 
-    assertThat(values(evenOrOdd.apply(true)), is(set(2, 100)));
-    assertThat(values(evenOrOdd.apply(false)), is(set(3)));
+    assertThat(values(evenOrOdd.apply(true))).isEqualTo(set(2, 100));
+    assertThat(values(evenOrOdd.apply(false))).isEqualTo(set(3));
   }
 
   @Test
@@ -160,10 +159,10 @@ public class DefaultMethodsTest {
     map.put("one", 1);
 
     map.replace("one", 2, 100);
-    assertThat(map.get("one"), is(1));
+    assertThat(map.get("one")).isEqualTo(1);
 
     map.replace("one", 1, 100);
-    assertThat(map.get("one"), is(100));
+    assertThat(map.get("one")).isEqualTo(100);
   }
 
   @Test
@@ -176,8 +175,8 @@ public class DefaultMethodsTest {
 
     map.replace("one", 1, 100);
 
-    assertThat(values(evenOrOdd.apply(true)), is(set(2, 100)));
-    assertThat(values(evenOrOdd.apply(false)), is(set(3)));
+    assertThat(values(evenOrOdd.apply(true))).isEqualTo(set(2, 100));
+    assertThat(values(evenOrOdd.apply(false))).isEqualTo(set(3));
   }
 
   // todo test compute

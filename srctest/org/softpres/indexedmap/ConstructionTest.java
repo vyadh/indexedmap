@@ -9,8 +9,7 @@ import org.softpres.indexedmap.animal.Id;
 import java.util.*;
 import java.util.function.Function;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.softpres.indexedmap.animal.Animals.*;
 
 /**
@@ -24,8 +23,8 @@ public class ConstructionTest {
     IndexedMap<Id, Animal> map = new IndexedMapBuilder<Id, Animal>()
           .primary(initial).build();
 
-    assertThat(map.get(dog.id), is(dog));
-    assertThat(map.get(cat.id), is(cat));
+    assertThat(map.get(dog.id)).isEqualTo(dog);
+    assertThat(map.get(cat.id)).isEqualTo(cat);
   }
 
   @Test
@@ -35,7 +34,7 @@ public class ConstructionTest {
           .primary(initial).build();
     Function<String, Map<Id, Animal>> byFood = map.addIndex((id, a) -> a.foods);
 
-    assertThat(byFood.apply("rabbit"), is(map(dog)));
+    assertThat(byFood.apply("rabbit")).isEqualTo(map(dog));
   }
 
 }

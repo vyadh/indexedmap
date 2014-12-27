@@ -8,8 +8,7 @@ import org.softpres.indexedmap.animal.Id;
 
 import java.util.*;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.softpres.indexedmap.animal.Animals.*;
 
 /**
@@ -24,7 +23,7 @@ public class SelectInsertDeleteTest {
 
     map.insert(id, dog);
 
-    assertThat(map.select(id), is(Optional.of(dog)));
+    assertThat(map.select(id)).isEqualTo(Optional.of(dog));
   }
 
   @Test
@@ -35,7 +34,7 @@ public class SelectInsertDeleteTest {
     map.insert(id, cat);
     Optional<Animal> previous = map.insert(id, dog);
 
-    assertThat(previous, is(Optional.of(cat)));
+    assertThat(previous).isEqualTo(Optional.of(cat));
   }
 
   @Test
@@ -45,7 +44,7 @@ public class SelectInsertDeleteTest {
 
     Optional<Animal> previous = map.insert(id, dog);
 
-    assertThat(previous, is((Optional.empty())));
+    assertThat(previous).isEqualTo((Optional.empty()));
   }
 
   @Test
@@ -55,7 +54,7 @@ public class SelectInsertDeleteTest {
 
     Optional<Animal> previous = map.delete(id);
 
-    assertThat(previous, is(Optional.empty()));
+    assertThat(previous).isEqualTo(Optional.empty());
   }
 
   @Test
@@ -66,7 +65,7 @@ public class SelectInsertDeleteTest {
     map.insert(id, dog);
     Optional<Animal> previous = map.delete(id);
 
-    assertThat(previous, is((Optional.of(dog))));
+    assertThat(previous).isEqualTo((Optional.of(dog)));
   }
 
 }

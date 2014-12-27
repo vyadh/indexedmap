@@ -11,9 +11,7 @@ import java.util.*;
 import java.util.function.Function;
 
 import static java.util.Collections.singleton;
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNull.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.softpres.indexedmap.animal.Animals.*;
 
 /**
@@ -27,7 +25,7 @@ public class MutationOperationsTest {
 
     Animal previous = map.remove(new Object());
 
-    assertThat(previous, nullValue());
+    assertThat(previous).isNull();
   }
 
   @Test
@@ -45,8 +43,8 @@ public class MutationOperationsTest {
 
     map.putAll(map(dog, cat, fish));
 
-    assertThat(putKeys, is(Arrays.asList(dog.id, cat.id, fish.id)));
-    assertThat(putValues, is(Arrays.asList(dog, cat, fish)));
+    assertThat(putKeys).isEqualTo(Arrays.asList(dog.id, cat.id, fish.id));
+    assertThat(putValues).isEqualTo(Arrays.asList(dog, cat, fish));
   }
 
   @Test
@@ -57,7 +55,7 @@ public class MutationOperationsTest {
 
     map.clear();
 
-    assertThat(map.isEmpty(), is(true));
+    assertThat(map.isEmpty()).isTrue();
   }
 
   @Test
@@ -75,8 +73,8 @@ public class MutationOperationsTest {
     map.clear();
 
     // Then
-    assertThat(byFood.apply("biscuits").isEmpty(), is(true));
-    assertThat(byLegs.apply(4).isEmpty(), is(true));
+    assertThat(byFood.apply("biscuits").isEmpty()).isTrue();
+    assertThat(byLegs.apply(4).isEmpty()).isTrue();
   }
 
   @Test
@@ -90,8 +88,8 @@ public class MutationOperationsTest {
     map.insert(new PreviousKey(), 1);
     Integer previous = map.remove(new AlternateKey());
 
-    assertThat(previous, nullValue());
-    assertThat(map.get(new PreviousKey()), is(1));
+    assertThat(previous).isNull();
+    assertThat(map.get(new PreviousKey())).isEqualTo(1);
   }
 
   @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")

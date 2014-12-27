@@ -13,8 +13,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.softpres.indexedmap.animal.Animals.*;
 
 /**
@@ -44,7 +43,7 @@ public class ViewsTest {
     map.insert(cat.id, cat);
     map.insert(dog.id, dog);
 
-    assertThat(map.entrySet(), is(map(dog, cat, fish).entrySet()));
+    assertThat(map.entrySet()).isEqualTo(map(dog, cat, fish).entrySet());
   }
 
   @Test (expected = UnsupportedOperationException.class)
@@ -73,7 +72,7 @@ public class ViewsTest {
     map.insert(cat.id, cat);
     map.insert(dog.id, dog);
 
-    assertThat(map.keySet(), is(map(dog, cat, fish).keySet()));
+    assertThat(map.keySet()).containsExactly(dog.id, cat.id, fish.id);
   }
 
   @Test (expected = UnsupportedOperationException.class)
@@ -94,10 +93,7 @@ public class ViewsTest {
     map.insert(cat.id, cat);
     map.insert(dog.id, dog);
 
-    assertThat(
-          // Wrap in HashSet, as Map#values() does not support equals
-          new HashSet<>(map.values()),
-          is(new HashSet<>(map(dog, cat, fish).values())));
+    assertThat(map.values()).containsOnly(dog, cat, fish);
   }
 
   @Test (expected = UnsupportedOperationException.class)
