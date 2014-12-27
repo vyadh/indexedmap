@@ -30,7 +30,7 @@ public class ManagedMapTest {
 
     map.clear();
 
-    assertThat(onDelete.allDeleted).isEqualTo(Arrays.asList(1, 2, 3));
+    assertThat(onDelete.allDeleted).containsExactly(1, 2, 3);
   }
 
   @Test
@@ -91,7 +91,7 @@ public class ManagedMapTest {
   }
 
   @Test
-  public void putAllCallsOnAddForItemsThatAreNewAndChangedForItemsExisting() {
+  public void putAllCallsOnAddForItemsThatAreNewAndOnChangedForExisting() {
     map.put("existing1", 1);
     map.put("existing3", 3);
     onNew.addedAll.clear();
@@ -104,9 +104,22 @@ public class ManagedMapTest {
 
     map.putAll(putting);
 
-    assertThat(onChange.currentAll).isEqualTo(Arrays.asList(1, 3));
-    assertThat(onChange.replacementAll).isEqualTo(Arrays.asList(11, 33));
-    assertThat(onNew.addedAll).isEqualTo(Arrays.asList(22, 44));
+    assertThat(onChange.currentAll).containsExactly(1, 3);
+    assertThat(onChange.replacementAll).containsExactly(11, 33);
+    assertThat(onNew.addedAll).containsExactly(22, 44);
+  }
+
+  @Test
+  public void replaceAllCallsOnChanged() {
+    map.put("a", 1);
+    map.put("b", 2);
+    map.put("c", 3);
+    map.put("d", 4);
+
+    map.replaceAll((k, v) -> v + 1);
+
+    assertThat(onChange.currentAll).containsExactly(1, 2, 3, 4);
+    assertThat(onChange.replacementAll).containsExactly(2, 3, 4, 5);
   }
 
   private static class CaptureAdd implements Function<Integer, Integer> {

@@ -10,7 +10,6 @@ import org.softpres.indexedmap.animal.Id;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;

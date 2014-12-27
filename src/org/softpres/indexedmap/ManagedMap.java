@@ -84,10 +84,10 @@ public class ManagedMap<K, V> implements Map<K, V> {
 
   // Default methods that need managing
 
-//  @Override
-//  public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
-//    map.replaceAll(function);
-//  }
+  @Override
+  public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
+    MapSupport.replaceAll(this, function);
+  }
 
   // Default methods dispatched for efficiency
 

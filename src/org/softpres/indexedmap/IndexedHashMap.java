@@ -257,15 +257,7 @@ public class IndexedHashMap<K, V> implements IndexedMap<K, V> {
 
   @Override
   public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
-    // Not exactly optimal, but good enough for now
-    Set<Entry<K, V>> entries = new HashSet<>(entrySet());
-    for (Entry<K, V> entry : entries) {
-      K key = entry.getKey();
-      V value = entry.getValue();
-      V newValue = function.apply(key, value);
-      remove(key);
-      put(key, newValue);
-    }
+    MapSupport.replaceAll(this, function);
   }
 
 }
