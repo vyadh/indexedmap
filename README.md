@@ -88,10 +88,19 @@ Java 8 default methods for `Map` are also supported.
 Optimistic Locking
 ------------------
 
-An optional optimistic locking facility is provided to protect the time between
-reads and writes of values. This works by checking writes for values are for
-the same 'revision' as the ones read. If the change is permitted, the revision
-is incremented and placed back into the map.
+Optimistic locking works by checking that writes for values are for the same
+'revision' (or a timestamp in some implementations) as the ones read. If the
+change is permitted, the revision is incremented and placed back into the map.
+
+However, this library is intended to be simple, and optimistic locking is
+difficult to do without a persistent (in the immutable sense) map and some
+sort of transaction concept, because a user operation that fails should do so
+atomically. This is straying too far into `ScalaSTM` territory.
+
+It would still be nice to have a simple (optional) optimistic locking facility
+to protect the time between reads and writes of values. In order to protect
+the integrity of the map, this can be performed at the application level using
+`ChangeCollector` operations as described in the `Transactions` section below.
 
 This feature is currently a work in progress.
 
