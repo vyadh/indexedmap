@@ -1,3 +1,6 @@
 *.iws
 .idea/workspace.xml
 out/
+/lib/
+/build/
+/.gradle/
