@@ -1,3 +1,5 @@
+/* IndexedMap - (c) 2014, Kieron Wilkinson */
+
 package org.softpres.indexedmap.deferredexample;
 
 import org.softpres.indexedmap.animal.Animal;
@@ -16,16 +18,17 @@ public class ExchangeAnimalOperation implements Operation<Id, Animal> {
     this.buying = buying;
   }
 
-  public void operate(
-        IndexedMap<Id, Animal> map,
-        ChangeCollector<Id, Animal> collector) {
+  public OperationResult<Id, Animal> operate(IndexedMap<Id, Animal> map) {
+    OperationResult<Id, Animal> result = OperationResult.empty();
 
     Optional<Animal> selling = map.select(sellingId);
     if (selling.isPresent()) {
-      collector.delete(sellingId);
+      result.deleted(sellingId);
       applicationProcessingThatMayFail();
-      collector.insert(buying.id, buying);
+      result.inserted(buying.id, buying);
     }
+
+    return result;
   }
 
   private void applicationProcessingThatMayFail() {
