@@ -103,6 +103,16 @@ public class IndexingTest {
           Arrays.asList(dog, cat, cow, sheep));
   }
 
+  @Test (expected = UnsupportedOperationException.class)
+  public void doNotAllowExternalModificationOfIndexMap() {
+    IndexedMap<Id, Animal> map = mapWithAnimals();
+    Function<String, Map<Id, Animal>> index =
+          map.addIndex((id, a) -> a.foods);
+    Map<Id, Animal> indexed = index.apply("biscuits");
+
+    indexed.remove(cat.id);
+  }
+
 
   private IndexedMap<Id, Animal> mapWithAnimals() {
     IndexedMap<Id, Animal> map = new IndexedHashMap<>();

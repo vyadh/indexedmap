@@ -106,8 +106,17 @@ public class IndexedHashMap<K, V> implements IndexedMap<K, V> {
       this.view = view;
     }
 
-    public Map<K, V> apply(I derived) {
+    public Map<K, V> applyMutable(I derived) {
       return mapping.getOrDefault(derived, Collections.emptyMap());
+    }
+
+    public Map<K, V> apply(I derived) {
+      Map<K, V> result = applyMutable(derived);
+      if (isUninitialised(result)) {
+        return result;
+      } else {
+        return Collections.unmodifiableMap(result);
+      }
     }
 
     void add(K key, V value) {
@@ -121,12 +130,16 @@ public class IndexedHashMap<K, V> implements IndexedMap<K, V> {
      * we were using the placeholder empty one.
      */
     private Map<K, V> associate(I i) {
-      Map<K, V> result = apply(i);
-      if (result == Collections.EMPTY_MAP) {
+      Map<K, V> result = applyMutable(i);
+      if (isUninitialised(result)) {
         result = new HashMap<>();
         mapping.put(i, result);
       }
       return result;
+    }
+
+    private boolean isUninitialised(Map<K, V> result) {
+      return result == Collections.EMPTY_MAP;
     }
 
     /**
