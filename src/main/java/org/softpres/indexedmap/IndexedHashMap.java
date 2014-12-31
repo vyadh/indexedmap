@@ -242,11 +242,10 @@ public class IndexedHashMap<K, V> implements IndexedMap<K, V> {
     primary.forEach(action);
   }
 
-  //todo
-//  @Override
-//  public V merge(K key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
-//    return primary.merge(key, value, remappingFunction);
-//  }
+  @Override
+  public V merge(K key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+    return IndexedMap.super.merge(key, value, remappingFunction);
+  }
 
   @Override
   public V putIfAbsent(K key, V value) {

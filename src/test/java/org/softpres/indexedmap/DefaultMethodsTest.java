@@ -45,6 +45,34 @@ public class DefaultMethodsTest {
   }
 
   @Test
+  public void mergeWithNoExistingValuePlacesTahatValue() {
+    map.merge("key", 10, (a, b) -> a + b);
+
+    assertThat(map.get("key")).isEqualTo(10);
+  }
+
+  @Test
+  public void mergeWithExistingValueDoesMerge() {
+    map.put("key", 5);
+    map.merge("key", 10, (a, b) -> a + b);
+
+    assertThat(map.get("key")).isEqualTo(15);
+  }
+
+  @Test
+  public void mergeUpdatesIndexes() {
+    Function<Boolean, Map<String, Integer>> evenOrOdd =
+          map.addIndex((k1, v1) -> Collections.singleton(v1 % 2 == 0));
+
+    map.merge("key1",  5, (a, b) -> a + b);
+    map.merge("key2",  5, (a, b) -> a + b);
+    map.merge("key2", 10, (a, b) -> a + b);
+
+    assertThat(values(evenOrOdd.apply(true))).isEmpty();
+    assertThat(values(evenOrOdd.apply(false))).containsExactly(5, 15);
+  }
+
+  @Test
   public void putIfAbsentUpdatesValues() {
     map.put("key", 1);
 
@@ -182,8 +210,6 @@ public class DefaultMethodsTest {
   // todo test compute
   // todo test computeIfAbsent
   // todo test computeIfPresent
-  // todo test putIfAbsent
-  // todo test merge
 
   private Set<Integer> values(Map<String, Integer> entries) {
     return new HashSet<>(entries.values());
